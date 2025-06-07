@@ -19,7 +19,7 @@ export function createUser(req: Request, res: Response) {
 
 export function listUsers(req: Request, res: Response) {
     try {
-        const users = userService.listUsers();
+        const users = userService.listUsers(req.query);
         res.status(201).json(
             {
                 mensagem: "Lista de usuários encontrada!",

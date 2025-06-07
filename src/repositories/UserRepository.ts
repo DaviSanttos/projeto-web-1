@@ -1,8 +1,54 @@
-import { User } from "../models/UserModel";
+import { User, userActive } from "../models/UserModel";
 
 export class UserRepository {
     private static instance: UserRepository;
-    private userList: User[] = [];
+    private userList: any= [
+         {
+            "ativo": userActive.ATIVO,
+            "nome": "davi",
+            "cpf": "12345678909",
+            "categoria_id": 1,
+            "curso_id": 1,
+            "email": "3",
+            "id": 1749302865474
+        },
+        {
+            "ativo": userActive.SUSPENSO,
+            "nome": "fe",
+            "cpf": "12345678909",
+            "categoria_id": 1,
+            "curso_id": 1,
+            "email": "3",
+            "id": 1749302876384
+        },
+        {
+            "ativo": userActive.INATIVO,
+            "nome": "ads",
+            "cpf": "12345678909",
+            "categoria_id": 2,
+            "curso_id": 1,
+            "email": "3",
+            "id": 1749302877183
+        },
+        {
+            "ativo": "ativo",
+            "nome": "ads",
+            "cpf": "12345678909",
+            "categoria_id": 1,
+            "curso_id": 1,
+            "email": "3",
+            "id": 1749302877973
+        },
+        {
+            "ativo": "ativo",
+            "nome": "ads",
+            "cpf": "12345678909",
+            "categoria_id": 1,
+            "curso_id": 1,
+            "email": "3",
+            "id": 1749302878800
+        }
+    ];
 
     private constructor() { }
 

@@ -1,9 +1,12 @@
 import { Router } from 'express';
-import { createUser, listUsers } from '../controllers/userController';
+import { createUser, listUsers } from '../controllers/UserController';
 
-const router = Router();
+const userRoutes = Router();
 
-router.get('/list', listUsers);
-router.post('/', createUser);
+userRoutes.post('/', createUser);
+userRoutes.get('/', listUsers);
+userRoutes.get('/:cpf', createUser);
+userRoutes.put('/:cpf', createUser);
+userRoutes.delete('/:cpf', createUser);
 
-export default router;
+export default userRoutes;

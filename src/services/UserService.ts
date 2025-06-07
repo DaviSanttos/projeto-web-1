@@ -1,22 +1,22 @@
-import { User } from "../models/userModel";
-import { UserRepository } from "../repositories/userRepository";
+import { User } from "../models/UserModel";
+import { UserRepository } from "../repositories/UserRepository";
 
 export class UserService {
     userRepository = UserRepository.getInstance();
 
     createUser(userData: any): User {
-        const { nome, cpf, ativo, categoria, curso_id } = userData;
+        const { nome, cpf, emai, categoria, curso } = userData;
 
-        if (!nome || !cpf || !ativo) {
+        if (!nome || !cpf || !emai || !categoria || !curso) {
             throw new Error("Informacoes incompletas");
         }
 
         const newUser = new User(
             nome, 
             cpf,
-            ativo,
+            emai,
             categoria,
-            curso_id
+            curso
         );
         this.userRepository.create(newUser);
         return newUser;

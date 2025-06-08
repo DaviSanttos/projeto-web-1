@@ -12,6 +12,10 @@ class BookCategoryService {
         if (!bookCategory) throw new Error("Categoria nao encontrada");
         return bookCategory;
     }
+
+    list() {
+        return this.bookCategoryRepository.list();
+    }
 }
 
 export default new BookCategoryService();

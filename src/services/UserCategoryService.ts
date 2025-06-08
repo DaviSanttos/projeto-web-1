@@ -13,6 +13,10 @@ class UserCategoryService {
         if (!userCategory) throw new Error("Categoria de usuário nao encontrada");
         return userCategory;
     }
+
+    list(): UserCategory[] {
+        return this.userCategoryRepository.list();
+    }
 }
 
 export default new UserCategoryService();

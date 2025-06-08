@@ -13,6 +13,10 @@ class CourseService {
         if (!course) throw new Error("Curso nao encontrado");
         return course;
     }
+
+    list(): Course[] {
+        return this.courseRepository.list();
+    }
 }
 
 export default new CourseService();

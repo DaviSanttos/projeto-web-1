@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { createUser, listUsers } from '../controllers/UserController';
+import { listBookCategories, listCourses, listUserCategories } from '../controllers/CatalogController';
 
 const catalogRoutes = Router();
 
-catalogRoutes.get('/categorias-usuario', createUser);
-catalogRoutes.get('/categorias-livro', createUser);
-catalogRoutes.get('/cursos', createUser);
+catalogRoutes.get('/categorias-usuario', listUserCategories);
+catalogRoutes.get('/categorias-livro', listBookCategories);
+catalogRoutes.get('/cursos', listCourses);
 
 export default catalogRoutes;

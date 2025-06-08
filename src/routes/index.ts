@@ -9,7 +9,7 @@ const router = Router();
 
 router.use('/usuarios', userRoutes);
 router.use('/livros', bookRoutes);
-router.use('/emprestimo', loanRoutes);
+router.use('/emprestimos', loanRoutes);
 router.use('/estoque', stockRoutes);
 router.use('/catalogos', catalogRoutes);
 

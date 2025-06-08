@@ -1,32 +1,49 @@
 import { Book } from "../models/BookModel";
 import { Loan } from "../models/LoanModel";
+import { User } from "../models/UserModel";
 import { LoanRepository } from "../repositories/LoanRepository";
+import { StockService } from "./StockService";
+import { UserService } from "./UserService";
 
 export class LoanService {
     loanRepository = LoanRepository.getInstance();
+    userService = new UserService();
+    stockService = new StockService();
 
-    createUser(userData: any): any {
-        const { titulo, autor, editora, edicao, isbn, categoria_id } = userData;
+    createLoan(loanData: any): Loan {
+        const cpf = loanData?.cpf;
+        const codigo_exemplar = loanData?.codigo_exemplar;
 
-        if (!titulo || !autor || !editora) {
+        if (!cpf || !codigo_exemplar) {
             throw new Error("Informacoes incompletas");
         }
 
-        // Assuming you meant to create a Book, not a User, since the return type is Book
-        // const newBook = new Loan(
-        //     titulo, 
-        //     autor, 
-        //     editora,
-        //     edicao,
-        //     isbn,
-        //     categoria_id
-        // );
-        // this.loanRepository.create(newBook);
-        // return newBook;
+        const user = this.userService.findUserByCpf(cpf);
+        if (!user) throw new Error("Usuário não encontrado");
+
+        const copy = this.stockService.findCopyById(codigo_exemplar);
+        if (!copy) throw new Error("Exemplar não encontrado");
+
+        const newLoan = new Loan(
+            user.id, 
+            copy.id
+        );
+
+        this.loanRepository.create(newLoan);
+        return newLoan;
     }
 
-    listUsers(): any[] {
+    listLoans(): any[] {
         return this.loanRepository.list();
     }
-    // ... outros mé todos
+
+    updateReturnDateById(id: string): Loan {
+        const loanId = parseInt(id);
+
+        const loan = this.loanRepository.findById(loanId);
+        if (!loan) throw new Error("Empréstimo não encontrado");
+
+        const updatedLoan = this.loanRepository.updateReturnDateById(loanId);
+        return updatedLoan;
+    }
 }

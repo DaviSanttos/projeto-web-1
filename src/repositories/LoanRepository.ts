@@ -21,5 +21,18 @@ export class LoanRepository {
     list(){
         return this.loanlist;
     }
+
+    findById(id: number): Loan | undefined {
+        return this.loanlist.find(loan => loan.id === id);
+    }
+
+    updateReturnDateById(id: number): Loan {
+        const index = this.loanlist.findIndex((l: Loan) => l.id === id);
+
+        const updatedLoan = this.loanlist[index];
+        updatedLoan.data_devolucao = new Date();
+
+        return updatedLoan;
+    }
     // ... outros mé todos
 }

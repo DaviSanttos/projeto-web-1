@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
+import { UserCategoryRepository } from "../repositories/UserCategoryRepository";
+import { CourseRepository } from "../repositories/CourseRepository";
 
 const userService = new UserService();
 
@@ -20,10 +22,12 @@ export function createUser(req: Request, res: Response) {
 export function listUsers(req: Request, res: Response) {
     try {
         const users = userService.listUsers(req.query);
+        const userCategories = UserCategoryRepository.getInstance().list();
+        const couse = CourseRepository.getInstance().list();
         res.status(201).json(
             {
                 mensagem: "Lista de usuários encontrada!",
-                users
+                users, userCategories, couse
             }
         );
     } catch (error: any) {

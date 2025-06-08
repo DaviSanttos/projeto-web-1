@@ -6,9 +6,9 @@ export class CourseRepository {
 
     private constructor() { 
         this.course = [
-            new Course("ADS"),
-            new Course("Pedagogia"),
-            new Course("Administração")
+            new Course("ADS", 1),
+            new Course("Pedagogia", 2),
+            new Course("Administração", 3)
         ];
      }
 
@@ -21,5 +21,9 @@ export class CourseRepository {
 
     list(){
         return this.course;
+    }
+
+    getIdByName(name: string): number | undefined {
+        return this.course.find(course => course.nome === name)?.id;
     }
 }

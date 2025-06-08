@@ -1,9 +1,13 @@
 import { User, userActiveValues } from "../models/UserModel";
 import { UserRepository } from "../repositories/UserRepository";
 import { validateCPF } from "../validators/validateCpf";
+import CourseService from "./CourseService";
+import UserCategoryService from "./UserCategoryService";
 
 export class UserService {
     userRepository = UserRepository.getInstance();
+    courseService =  CourseService;
+    userCategoryService = UserCategoryService;
 
     createUser(userData: any): User {
         const nome = userData?.nome;
@@ -12,16 +16,15 @@ export class UserService {
         const categoria = userData?.categoria;
         const curso = userData?.curso;
 
+
         if (!nome || !cpf || !email || !categoria || !curso) {
             throw new Error("Informacoes incompletas");
         }
 
         validateCPF(cpf);
-        // TODO preciso do service de curos aqui para pegar o id curso pelo nome
 
-        const curso_id = 1;
-        const categoria_id = 1;
-        // TODO service de categoria tmb
+        const curso_id = this.courseService.findCourseIdByname(curso);
+        const categoria_id = this.userCategoryService.findUserCategoryIdByname(categoria);
 
         const newUser = new User(
             nome,

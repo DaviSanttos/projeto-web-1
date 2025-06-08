@@ -6,11 +6,11 @@ const bookService = new BookService();
 
 export function createBook(req: Request, res: Response) {
     try {
-        const newUser = bookService.createBook(req.body);
+        const newbook = bookService.createBook(req.body);
         res.status(201).json(
             {
                 mensagem: "Livro cadastrado com sucesso!",
-                user: newUser
+                book: newbook
             }
         );
     } catch (error: any) {
@@ -18,67 +18,67 @@ export function createBook(req: Request, res: Response) {
     }
 };
 
-// export function listUsers(req: Request, res: Response) {
-//     try {
-//         const users = userService.listUsers(req.query);
-//         res.status(201).json(
-//             {
-//                 mensagem: "Lista de usuários encontrada!",
-//                 users
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
+export function listBooks(req: Request, res: Response) {
+    try {
+        const books = bookService.listBooks(req.query);
+        res.status(201).json(
+            {
+                mensagem: "Lista de livros encontrada!",
+                books
+            }
+        );
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
-// export function findUserByCpf(req: Request, res: Response) {
-//     try {
-//         const cpf = req.params.cpf;
+export function findBookByIsbn(req: Request, res: Response) {
+    try {
+        const isbn = req.params.isbn;
         
-//         const user = userService.findUserByCpf(cpf);
+        const book = bookService.findBookByIsbn(isbn);
 
-//         res.status(201).json(
-//             {
-//                 mensagem: "usuário encontrada!",
-//                 user
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
+        res.status(201).json(
+            {
+                mensagem: "livro encontrado!",
+                book
+            }
+        );
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
-// export function updateUserByCpf(req: Request, res: Response) {
-//     try {
-//         const cpf = req.params.cpf;
+export function updateBookByIsbn(req: Request, res: Response) {
+    try {
+        const isbn = req.params.isbn;
 
-//         const updatedUser = userService.updateUserByCpf(cpf, req.body);
+        const updatedBook = bookService.updateBookByIsbn(isbn, req.body);
 
-//         res.status(201).json(
-//             {
-//                 mensagem: "usuário atualizado!",
-//                 updatedUser
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
+        res.status(201).json(
+            {
+                mensagem: "livro atualizado!",
+                updatedBook
+            }
+        );
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
-// export function deleteUserByCpf(req: Request, res: Response) {
-//     try {
-//         const cpf = req.params.cpf;
+export function deleteBookByIsbn(req: Request, res: Response) {
+    try {
+        const isbn = req.params.isbn;
 
-//         const deletedUser = userService.deleteUserByCpf(cpf);
+        const deletedBook = bookService.deleteBookByIsbn(isbn);
 
-//         res.status(201).json(
-//             {
-//                 mensagem: "usuário edeletado!",
-//                 deletedUser
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
+        res.status(201).json(
+            {
+                mensagem: "Livro deletado!",
+                deletedBook
+            }
+        );
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
+    }
+};

@@ -4,12 +4,9 @@ export class BookCategory {
 
     constructor(
         nome: string, 
+        id: number
     ) {
         this.nome = nome;
-        this.id = this.geraId();
-    }
-
-    private geraId(): number {
-        return Date.now();
+        this.id = id;
     }
 }

@@ -2,7 +2,7 @@ import { User, userActive } from "../models/UserModel";
 
 export class UserRepository {
     private static instance: UserRepository;
-    private userList: any =  [];
+    private userList: User[] =  [];
     // [
     //     {
     //         "ativo": userActive.ATIVO,
@@ -72,7 +72,7 @@ export class UserRepository {
         return this.userList.find((user: User) => user.cpf === cpf);
     }
 
-    updateById(id: number, updates: Partial<User>): User {
+    updateById(id: number, updates: any): User {
         const index = this.userList.findIndex((u: User) => u.id === id);
         
         this.userList[index] = { 
@@ -90,5 +90,9 @@ export class UserRepository {
         this.userList.splice(index, 1);
         
         return deletedUser;
+    }
+
+    existsByCpf(cpf: string): boolean {
+        return this.userList.some((user: User) => user.cpf === cpf);
     }
 }

@@ -1,4 +1,4 @@
-import { BookCategory } from "../models/BookCategory";
+import { BookCategory } from "../models/BookCategoryModel";
 
 export class BookCategoryRepository {
     private static instance: BookCategoryRepository;
@@ -6,10 +6,10 @@ export class BookCategoryRepository {
 
     private constructor() { 
         this.bookCategoryList = [
-            new BookCategory("Romance"),
-            new BookCategory("Computação"),
-            new BookCategory("Letras"),
-            new BookCategory("Gestão")
+            new BookCategory("Romance", 1),
+            new BookCategory("Computação", 2),
+            new BookCategory("Letras", 3),
+            new BookCategory("Gestão", 4)
         ];
     }
 
@@ -23,5 +23,8 @@ export class BookCategoryRepository {
     list(){
         return this.bookCategoryList;
     }
-    // ... outros mé todos
+    
+    getIdByName(name: string): number | undefined {
+        return this.bookCategoryList.find(category => category.nome === name)?.id;
+    }
 }

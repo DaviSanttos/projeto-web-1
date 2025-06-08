@@ -6,7 +6,7 @@ class CourseService {
 
     findCourseIdByname(name: string): number {
 
-        if (!name) throw new Error("Informacoes incompletas");
+        if (!name) throw new Error("sem nome de curso");
 
         const course = this.courseRepository.getIdByName(name);
 

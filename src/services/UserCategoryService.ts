@@ -6,7 +6,7 @@ class UserCategoryService {
 
     findUserCategoryIdByname(name: string): number {
 
-        if (!name) throw new Error("Informacoes incompletas");
+        if (!name) throw new Error("Sem nome de categoria de usuário");
 
         const userCategory = this.userCategoryRepository.getIdByName(name);
 

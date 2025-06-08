@@ -6,7 +6,7 @@ import UserCategoryService from "./UserCategoryService";
 
 export class UserService {
     userRepository = UserRepository.getInstance();
-    courseService =  CourseService;
+    courseService = CourseService;
     userCategoryService = UserCategoryService;
 
     createUser(userData: any): User {
@@ -22,6 +22,9 @@ export class UserService {
         }
 
         validateCPF(cpf);
+
+        const exists = this.userRepository.existsByCpf(cpf);
+        if (exists) throw new Error("Usuário já cadastrado com esse CPF");
 
         const curso_id = this.courseService.findCourseIdByname(curso);
         const categoria_id = this.userCategoryService.findUserCategoryIdByname(categoria);
@@ -65,21 +68,11 @@ export class UserService {
         return user;
     }
 
-    updateUserByCpf(cpf: string, body: Partial<User>): User {
+    updateUserByCpf(cpf: string, body: any): User {
         validateCPF(cpf);
 
-        // TODO pegar curso
-        // TODO pegar caegoria 
         if (body?.ativo && !userActiveValues.includes(body.ativo)) {
             throw new Error("Status inválido. Valores válidos: " + userActiveValues.join(", "));
-        }
-
-        const userUpdate: Partial<User> = {
-            nome: body.nome,
-            email: body.email,
-            ativo: body.ativo,
-            // categoria_id: body.categoria_id,
-            // curso_id: body.curso_id
         }
 
         const user = this.userRepository.findByCpf(cpf);
@@ -88,11 +81,24 @@ export class UserService {
             throw new Error("Usuário não encontrado");
         }
 
+        const categoria_id = this.userCategoryService.findUserCategoryIdByname(body.categoria);
+        const curso_id = this.courseService.findCourseIdByname(body.curso);
+
+        const userUpdate: Partial<User> = {
+            nome: body.nome,
+            email: body.email,
+            ativo: body.ativo,
+            categoria_id,
+            curso_id
+        }
+
+
         const newUser = this.userRepository.updateById(user.id, userUpdate);
         return newUser;
     }
 
     deleteUserByCpf(cpf: string): User {
+        // TODO remover se nao tiver emprestimos
         validateCPF(cpf);
 
         const user = this.userRepository.findByCpf(cpf);

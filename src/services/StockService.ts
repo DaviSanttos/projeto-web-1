@@ -43,8 +43,6 @@ export class StockService {
         const copy = this.stockRepository.findById(copyId);
         if (!copy) throw new Error("Exemplar não encontrado");
 
-        if (!availaBility) throw new Error("Envie o status de disponibilidade");
-
         const updatedCopy = this.stockRepository.updateAvalabilityById(copyId, availaBility);
         return updatedCopy;
     }
@@ -58,5 +56,12 @@ export class StockService {
         if (!exists) throw new Error("Exemplar não encontrado");
 
         return this.stockRepository.deleteById(copyId);
+    }
+
+    setAvailabilityFalseAndIncrementQuantity(codigo: string): Stock {
+        const copyId = parseInt(codigo);
+
+        const updatedCopy = this.stockRepository.setAvalabilityFalseAndIncrementById(copyId);
+        return updatedCopy;
     }
 }

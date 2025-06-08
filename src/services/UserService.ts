@@ -1,7 +1,9 @@
+import { Loan } from "../models/LoanModel";
 import { User, userActiveValues } from "../models/UserModel";
 import { UserRepository } from "../repositories/UserRepository";
 import { validateCPF } from "../validators/validateCpf";
 import CourseService from "./CourseService";
+import { LoanService } from "./LoanService";
 import UserCategoryService from "./UserCategoryService";
 
 export class UserService {
@@ -98,13 +100,19 @@ export class UserService {
     }
 
     deleteUserByCpf(cpf: string): User {
-        // TODO remover se nao tiver emprestimos
         validateCPF(cpf);
 
+        const loanService = new LoanService();
         const user = this.userRepository.findByCpf(cpf);
 
         if (!user) {
             throw new Error("Usuário não encontrado");
+        }
+
+        const loans = loanService.findLoansByUserId(user.id);
+
+        if (loans.length > 0) {
+            throw new Error("Usuário não pode ser excluído, pois possui empréstimos pendentes.");
         }
 
         return this.userRepository.deleteUserById(user.id);

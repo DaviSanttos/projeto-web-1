@@ -19,6 +19,14 @@ export class BookService {
 
         const exists = this.bookRepository.existsByIsbn(isbn);
         if (exists) throw new Error("Livro já cadastrado com esse ISBN");
+
+        const book = this.bookRepository.findBookByEditionPublisherAuthor({
+            edicao: edicao,
+            editora: editora,
+            autor: autor
+        });
+
+        if (book) throw new Error("Livro já cadastrado com esses dados: autor, editora e edição");
         
         const categoria_id = BookCategoryService.findBookCategoryIdByname(categoria);
 
@@ -63,12 +71,12 @@ export class BookService {
     updateBookByIsbn(isbn: string, body: any): Book {
         const book = this.bookRepository.getByIsbn(isbn);
         if (!book) throw new Error("Livro nao encontrado");
-        let categoria_id: number | undefined;
 
-        if (body.categoria) {
-            categoria_id = BookCategoryService.findBookCategoryIdByname(body.categoria);
+        if (!body.titulo || !body.autor || !body.editora || !body.edicao || !body.categoria) {
+            throw new Error("Informacoes incompletas");
         }
-        
+
+        const categoria_id = BookCategoryService.findBookCategoryIdByname(body.categoria);
 
         const bookUpdate: Partial<Book> = {
             titulo: body.titulo,

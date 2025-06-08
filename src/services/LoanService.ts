@@ -1,6 +1,6 @@
 import { Book } from "../models/BookModel";
 import { Loan } from "../models/LoanModel";
-import { User } from "../models/UserModel";
+import { User, userActive } from "../models/UserModel";
 import { LoanRepository } from "../repositories/LoanRepository";
 import { StockService } from "./StockService";
 import { UserService } from "./UserService";
@@ -21,8 +21,14 @@ export class LoanService {
         const user = this.userService.findUserByCpf(cpf);
         if (!user) throw new Error("Usuário não encontrado");
 
+        if (user.ativo != userActive.ATIVO) throw new Error("Somente usuários ativos podem realizar empréstimos");
+
         const copy = this.stockService.findCopyById(codigo_exemplar);
         if (!copy) throw new Error("Exemplar não encontrado");
+
+        if (copy.disponivel === false) throw new Error("Exemplar não disponível para empréstimo");
+
+        this.stockService.setAvailabilityFalseAndIncrementQuantity(codigo_exemplar);
 
         const newLoan = new Loan(
             user.id, 
@@ -45,5 +51,16 @@ export class LoanService {
 
         const updatedLoan = this.loanRepository.updateReturnDateById(loanId);
         return updatedLoan;
+    }
+
+    findLoansByUserId(userId: number): Loan[] {
+        const loans = this.loanRepository.list();
+        const userLoans = loans.filter(loan => loan.usuario_id === userId && !loan.data_devolucao);
+
+        if (userLoans.length === 0) {
+            throw new Error("Nenhum empréstimo encontrado para este usuário");
+        }
+
+        return userLoans;
     }
 }

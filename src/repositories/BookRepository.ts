@@ -5,8 +5,6 @@ export class BookRepository {
     private static instance: BookRepository;
     private booklist: Book[] = [];
 
-    private constructor() { }
-
     public static getInstance(): BookRepository {
         if (!this.instance) {
             this.instance = new BookRepository();
@@ -49,5 +47,13 @@ export class BookRepository {
 
     existsByIsbn(isbn: string): boolean {
         return this.booklist.some((book: Book) => book.isbn === isbn);
+    }
+
+    findBookByEditionPublisherAuthor (params: { edicao: string, editora: string, autor: string }): Book | undefined {
+        return this.booklist.find((book: Book) => { 
+            return book.edicao === params.edicao && 
+            book.editora === params.editora && 
+            book.autor === params.autor 
+        });
     }
 }

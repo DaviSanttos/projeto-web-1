@@ -46,4 +46,13 @@ export class StockRepository {
         this.stocklist.splice(index, 1);
         return deletedCopy;
     }
+
+    setAvalabilityFalseAndIncrementById(id: number): Stock {
+        const index = this.stocklist.findIndex((u: Stock) => u.id === id);
+        
+        this.stocklist[index].disponivel = false;
+        this.stocklist[index].quantidade_emprestada = 1;
+
+        return this.stocklist[index];
+    }
 }

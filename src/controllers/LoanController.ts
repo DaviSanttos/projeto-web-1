@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { BookService } from "../services/BookService";
-import { StockService } from "../services/StockService";
 import { LoanService } from "../services/LoanService";
 
 
@@ -50,20 +48,3 @@ export function updateReturnDateById(req: Request, res: Response) {
         res.status(400).json({ message: error.message });
     }
 };
-
-// export function deleteCopyById(req: Request, res: Response) {
-//     try {
-//         const codigo = req.params.codigo;
-
-//         const deletedCopy = stockService.deleteCopyById(codigo);
-
-//         res.status(201).json(
-//             {
-//                 mensagem: "Exemplar deletado!",
-//                 deletedCopy
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };

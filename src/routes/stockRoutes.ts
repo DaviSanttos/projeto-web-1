@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import { createUser, listUsers } from '../controllers/UserController';
+import { createUser } from '../controllers/UserController';
+import { createCopy, deleteCopyById, findCopyById, listCopies, updateAvailabilityById } from '../controllers/StockController';
 
 const stockRoutes = Router();
 
-stockRoutes.post('/', createUser);
-stockRoutes.get('/', listUsers);
-stockRoutes.get('/:codigo', createUser);
-stockRoutes.put('/:codigo', createUser);
-stockRoutes.delete('/:codigo', createUser);
+stockRoutes.post('/', createCopy);
+stockRoutes.get('/', listCopies);
+stockRoutes.get('/:codigo', findCopyById);
+stockRoutes.put('/:codigo', updateAvailabilityById);
+stockRoutes.delete('/:codigo', deleteCopyById);
 
 export default stockRoutes;

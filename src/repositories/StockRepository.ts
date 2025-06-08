@@ -22,5 +22,28 @@ export class StockRepository {
     list(){
         return this.stocklist;
     }
-    // ... outros mé todos
+
+    existsById(id: number): boolean {
+        return this.stocklist.some(stock => stock.id === id);
+    }
+
+    findById(id: number): Stock | undefined {
+        return this.stocklist.find(stock => stock.id === id);
+    }
+
+    updateAvalabilityById(id: number, availaBility: boolean): Stock {
+        const index = this.stocklist.findIndex((u: Stock) => u.id === id);
+        
+        this.stocklist[index].disponivel = availaBility;
+
+        return this.stocklist[index];
+    }
+
+    deleteById(id: number): Stock {
+        const index = this.stocklist.findIndex((u: Stock) => u.id === id);
+        const deletedCopy = this.stocklist[index];
+
+        this.stocklist.splice(index, 1);
+        return deletedCopy;
+    }
 }

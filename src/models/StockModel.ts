@@ -1,24 +1,18 @@
 export class Stock {
     id: number;
     livro_id: string;
-    quantidade: string;
-    quantidade_emprestada: string;
-    disponivel: string;
+    quantidade: number;
+    quantidade_emprestada: number;
+    disponivel: boolean;
 
     constructor(
         livro_id: string, 
-        quantidade: string, 
-        quantidade_emprestada: string,
-        disponivel: string,
+        id: number
     ) {
         this.livro_id = livro_id;
-        this.quantidade = quantidade;
-        this.quantidade_emprestada = quantidade_emprestada;
-        this.disponivel = disponivel;
-        this.id = this.generateId();
-    }
-
-    private generateId(): number {
-        return Date.now();
+        this.quantidade = 1;
+        this.quantidade_emprestada = 0;
+        this.disponivel = true;
+        this.id = id;
     }
 }

@@ -4,6 +4,8 @@ export enum userActive {
     SUSPENSO = 'suspenso',
 }
 
+export const userActiveValues = Object.values(userActive);
+
 export class User {
     id: number;
     nome: string;

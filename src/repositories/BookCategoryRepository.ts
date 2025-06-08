@@ -2,9 +2,16 @@ import { BookCategory } from "../models/BookCategory";
 
 export class BookCategoryRepository {
     private static instance: BookCategoryRepository;
-    private userList: BookCategory[] = [];
+    private bookCategoryList: BookCategory[] = [];
 
-    private constructor() { }
+    private constructor() { 
+        this.bookCategoryList = [
+            new BookCategory("Romance"),
+            new BookCategory("Computação"),
+            new BookCategory("Letras"),
+            new BookCategory("Gestão")
+        ];
+    }
 
     public static getInstance(): BookCategoryRepository {
         if (!this.instance) {
@@ -13,12 +20,8 @@ export class BookCategoryRepository {
         return this.instance;
     }
 
-    create(book: BookCategory) {
-        this.userList.push(book);
-    }
-
     list(){
-        return this.userList;
+        return this.bookCategoryList;
     }
     // ... outros mé todos
 }

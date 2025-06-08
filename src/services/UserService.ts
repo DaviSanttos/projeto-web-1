@@ -1,4 +1,4 @@
-import { User } from "../models/UserModel";
+import { User, userActiveValues } from "../models/UserModel";
 import { UserRepository } from "../repositories/UserRepository";
 import { validateCPF } from "../validators/validateCpf";
 
@@ -17,11 +17,11 @@ export class UserService {
         }
 
         validateCPF(cpf);
-        // preciso do service de curos aqui para pegar o id curso pelo nome
+        // TODO preciso do service de curos aqui para pegar o id curso pelo nome
 
         const curso_id = 1;
         const categoria_id = 1;
-        // service de categoria tmb
+        // TODO service de categoria tmb
 
         const newUser = new User(
             nome,
@@ -50,5 +50,54 @@ export class UserService {
             );
         });
     }
-    // ... outros mé todos
+
+    findUserByCpf(cpf: string): User {
+        validateCPF(cpf);
+
+        const user = this.userRepository.findByCpf(cpf);
+
+        if (!user) {
+            throw new Error("Usuário não encontrado");
+        }
+        return user;
+    }
+
+    updateUserByCpf(cpf: string, body: Partial<User>): User {
+        validateCPF(cpf);
+
+        // TODO pegar curso
+        // TODO pegar caegoria 
+        if (body?.ativo && !userActiveValues.includes(body.ativo)) {
+            throw new Error("Status inválido. Valores válidos: " + userActiveValues.join(", "));
+        }
+
+        const userUpdate: Partial<User> = {
+            nome: body.nome,
+            email: body.email,
+            ativo: body.ativo,
+            // categoria_id: body.categoria_id,
+            // curso_id: body.curso_id
+        }
+
+        const user = this.userRepository.findByCpf(cpf);
+
+        if (!user) {
+            throw new Error("Usuário não encontrado");
+        }
+
+        const newUser = this.userRepository.updateById(user.id, userUpdate);
+        return newUser;
+    }
+
+    deleteUserByCpf(cpf: string): User {
+        validateCPF(cpf);
+
+        const user = this.userRepository.findByCpf(cpf);
+
+        if (!user) {
+            throw new Error("Usuário não encontrado");
+        }
+
+        return this.userRepository.deleteUserById(user.id);
+    }
 }

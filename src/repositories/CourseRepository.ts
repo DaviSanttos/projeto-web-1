@@ -1,12 +1,16 @@
 import { Course } from "../models/CourseModel";
-import { UserCategory } from "../models/UserCategory";
-import { User } from "../models/UserModel";
 
 export class CourseRepository {
     private static instance: CourseRepository;
-    private userList: Course[] = [];
+    private course: Course[] = [];
 
-    private constructor() { }
+    private constructor() { 
+        this.course = [
+            new Course("ADS"),
+            new Course("Pedagogia"),
+            new Course("Administração")
+        ];
+     }
 
     public static getInstance(): CourseRepository {
         if (!this.instance) {
@@ -15,12 +19,7 @@ export class CourseRepository {
         return this.instance;
     }
 
-    create(course: Course) {
-        this.userList.push(course);
-    }
-
     list(){
-        return this.userList;
+        return this.course;
     }
-    // ... outros mé todos
 }

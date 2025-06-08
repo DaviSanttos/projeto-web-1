@@ -1,6 +1,9 @@
 import { Book } from "../models/BookModel";
 import { BookRepository } from "../repositories/BookRepository";
 import BookCategoryService from "./BookCategoryService";
+import CourseService from "./CourseService";
+import { LoanService } from "./LoanService";
+import { StockService } from "./StockService";
 
 export class BookService {
     bookRepository = BookRepository.getInstance();
@@ -91,14 +94,33 @@ export class BookService {
     }
 
     deleteBookByIsbn(isbn: string): Book {
-        // TODO rover se nao estiver emprestado
-
         const book = this.bookRepository.getByIsbn(isbn);
         if (!book) throw new Error("Livro nao encontrado");
+
+        const stockService = new StockService();
+
+        const copies = stockService.findCopiesByBookId(book.id);
+
+        const loanService = new LoanService();
+
+        const loans = loanService.findLoansByCopyIds(copies.map(copy => copy.id));
+
+        if (loans.length > 0) {
+            throw new Error("Livro não pode ser deletado, pois existem exemplares emprestados");
+        }
 
         const deletedBook = this.bookRepository.deleteBookById(book.id);
 
         return deletedBook;
     }
 
+    getRelacionCourseToBookCategory(couserId: number, bookId: number): boolean {
+        const book = this.bookRepository.findById(bookId);
+
+        if (!book) throw new Error("Livro não encontrado");
+
+        const bookCategoryId = book.categoria_id;
+
+        return CourseService.relacionCourseToBookCategory(couserId, bookCategoryId);
+    }
 }

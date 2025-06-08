@@ -34,5 +34,4 @@ export class LoanRepository {
 
         return updatedLoan;
     }
-    // ... outros mé todos
 }

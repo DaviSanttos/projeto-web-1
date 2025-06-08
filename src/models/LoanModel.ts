@@ -11,8 +11,8 @@ export class Loan {
     constructor(
         usuario_id: number, 
         estoque_id: number, 
-        data_emprestimo: Date = new Date(),
         data_entrega: Date = new Date(),
+        data_emprestimo: Date = new Date()
     ) {
         this.usuario_id = usuario_id;
         this.estoque_id = estoque_id;

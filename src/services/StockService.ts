@@ -1,13 +1,18 @@
 import { Book } from "../models/BookModel";
 import { Stock } from "../models/StockModel";
 import { StockRepository } from "../repositories/StockRepository";
+import { BookService } from "./BookService";
 
 export class StockService {
     stockRepository = StockRepository.getInstance();
+    bookService = new BookService();
 
     createCopy(copyData: any): any {
-        const livro_id = copyData?.ISBN;
+        const isbn = copyData?.ISBN;
         const id = copyData?.codigo_exemplar;
+
+        const livro_id = this.bookService.findBookByIsbn(isbn)?.id;
+        if (!livro_id) throw new Error("Livro não encontrado com esse ISBN");
 
         const exists = this.stockRepository.existsById(parseInt(id));
         if (exists) throw new Error("Exemplar já cadastrado Com esse código");
@@ -48,13 +53,12 @@ export class StockService {
     }
 
     deleteCopyById(codigo: string): Stock {
-        // TODO deletar somente se nao estiver emprestado
-        
         const copyId = parseInt(codigo);
 
-        const exists = this.stockRepository.existsById(copyId);
-        if (!exists) throw new Error("Exemplar não encontrado");
+        const copy = this.stockRepository.findById(copyId);
+        if (!copy) throw new Error("Exemplar não encontrado");
 
+        if (!copy.disponivel) throw new Error("Exemplar não pode ser deletado, pois está emprestado");
         return this.stockRepository.deleteById(copyId);
     }
 
@@ -63,5 +67,9 @@ export class StockService {
 
         const updatedCopy = this.stockRepository.setAvalabilityFalseAndIncrementById(copyId);
         return updatedCopy;
+    }
+
+    findCopiesByBookId(livro_id: number): Stock[] {
+        return this.stockRepository.list().filter((copy) => copy.livro_id === livro_id);
     }
 }

@@ -1,12 +1,12 @@
 export class Stock {
     id: number;
-    livro_id: string;
+    livro_id: number;
     quantidade: number;
     quantidade_emprestada: number;
     disponivel: boolean;
 
     constructor(
-        livro_id: string, 
+        livro_id: number, 
         id: number
     ) {
         this.livro_id = livro_id;

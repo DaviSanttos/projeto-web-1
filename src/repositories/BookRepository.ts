@@ -56,4 +56,8 @@ export class BookRepository {
             book.autor === params.autor 
         });
     }
+
+    findById(id: number): Book | undefined {
+        return this.booklist.find((book: Book) => book.id === id);
+    }
 }

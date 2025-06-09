@@ -14,12 +14,11 @@ export class UserService {
     createUser(userData: any): User {
         const nome = userData?.nome;
         const cpf = userData?.cpf;
-        const email = userData?.email;
         const categoria = userData?.categoria;
         const curso = userData?.curso;
 
 
-        if (!nome || !cpf || !email || !categoria || !curso) {
+        if (!nome || !cpf || !categoria || !curso) {
             throw new Error("Informacoes incompletas");
         }
 
@@ -35,8 +34,7 @@ export class UserService {
             nome,
             cpf,
             categoria_id,
-            curso_id,
-            email
+            curso_id
         );
         this.userRepository.create(newUser);
         return newUser;
@@ -45,14 +43,11 @@ export class UserService {
     listUsers(params: any): User[] {
         const userList = this.userRepository.list();
 
-        console.log(params)
-
         return userList.filter((user: any) => {
             return (
                 (!params?.nome || user.nome.toLowerCase().includes(params.nome.toLowerCase())) &&
                 (!params?.cpf || user.cpf.includes(params.cpf)) &&
-                (!params?.email || user.email?.toLowerCase().includes(params.email.toLowerCase())) &&
-                (params?.ativo === undefined || user.ativo === params.ativo) &&
+                (!params?.ativo || user.ativo === params.ativo) &&
                 (!params?.categoria_id || user.categoria_id === parseInt(params.categoria_id)) &&
                 (!params?.curso_id || user.curso_id === params.curso_id)
             );
@@ -88,7 +83,6 @@ export class UserService {
 
         const userUpdate: Partial<User> = {
             nome: body.nome,
-            email: body.email,
             ativo: body.ativo,
             categoria_id,
             curso_id

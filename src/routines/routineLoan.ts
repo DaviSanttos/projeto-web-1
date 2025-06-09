@@ -22,12 +22,21 @@ export class routineLoan {
             const suspensionCountByUser: { [userId: number]: number } = {};
             const suspensionDaysByUser: { [userId: number]: number } = {};
 
+            const usersInSuspensionOrInactived = this.userRepository.list().filter(user =>
+                user.ativo === userActive.SUSPENSO ||
+                user.ativo === userActive.INATIVO
+            );
+
+            const usersIdsInSuspensionOrInactive = usersInSuspensionOrInactived.map(user => user.id);
+
             const loans = this.loanService.listLoans().filter((loan) =>
                 !loan.data_devolucao &&
-                (Time.toBrazilTime(loan.suspensao_ate) < suspensao70dias ||
-                !loan.suspensao_ate
-            ));
+                (Time.toBrazilTime(loan.suspensao_ate) <= today || !loan.suspensao_ate) &&
+                !usersIdsInSuspensionOrInactive.includes(loan.usuario_id) &&
+                Time.toBrazilTime(loan.data_entrega) <= today
+            );
 
+            
             console.log(chalk.blue.bold("Empréstimos encontrados:", loans.length));
 
             loans.forEach((loan) => {

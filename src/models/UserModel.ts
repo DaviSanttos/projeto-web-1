@@ -15,21 +15,18 @@ export class User {
     ativo: userActive = userActive.ATIVO;
     categoria_id: number;
     curso_id: number;
-    email?: string;
 
     constructor(
         nome: string, 
         cpf: string, 
         categoria_id: number,
-        curso_id: number,
-        email?: string
+        curso_id: number
     ) {
         this.nome = nome;
         this.cpf = cpf;
         this.ativo = userActive.ATIVO;
         this.categoria_id = categoria_id;
         this.curso_id = curso_id;
-        this.email = email;
         this.id = IdGenerator.generate();
     }
 }

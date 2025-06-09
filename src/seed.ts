@@ -10,13 +10,12 @@ export function seedData() {
     const userService = new UserService();
     const bookService = new BookService();
     const strockService = new StockService();
-    const loanService = new LoanService();
     const loanRepository = LoanRepository.getInstance();
 
     // Usuários
     const user1 = userService.createUser({
         nome: "João",
-        cpf: "12345678900",
+        cpf: "20632816023",
         email: "joao@email.com",
         categoria: "Aluno",
         curso: "ADS"
@@ -24,15 +23,15 @@ export function seedData() {
 
     const user2 = userService.createUser({
         nome: "Maria",
-        cpf: "98765432100",
+        cpf: "21743349092",
         email: "maria@email.com",
         categoria: "Aluno",
         curso: "Pedagogia"
     });
 
-      const user3 = userService.createUser({
+    const user3 = userService.createUser({
         nome: "Davizeira",
-        cpf: "12345678909",
+        cpf: "10653753012",
         email: "davi@email.com",
         categoria: "Professor",
         curso: "ADS"
@@ -68,7 +67,7 @@ export function seedData() {
     const copy8 = strockService.createCopy({ ISBN: book1.isbn, codigo_exemplar: '008' });
 
 
-    // Empréstimos vencidos (há 20 dias) e não devolvidos
+    // Empréstimos vencidos e não devolvidos
     const vencido20dias = Time.addDays(Time.nowInBrazil(), -20);
     const vencido30dias = Time.addDays(Time.nowInBrazil(), -30);
     const vencido5dias = Time.addDays(Time.nowInBrazil(), -5);
@@ -104,11 +103,24 @@ export function seedData() {
         vencido30dias
     ));
 
-    // loanRepository.create(new Loan(
-    //     user2.id,
-    //     copy6.id,
-    //     vencido20dias
-    // ));
+    sleep(25000).then(() => {
+        console.log("⏳ Aguardando 25 segundo para simular atraso...");
+
+        const user4 = userService.createUser({
+            nome: "Otavio",
+            cpf: "82098206054",
+            email: "otavio@email.com",
+            categoria: "Professor",
+            curso: "Administração"
+        });
+
+        loanRepository.create(new Loan(
+            user4.id,
+            copy6.id,
+            vencido30dias
+        ));
+
+    });
 
     loanRepository.create(new Loan(
         user3.id,
@@ -116,20 +128,16 @@ export function seedData() {
         vencido5dias
     ));
 
-     loanRepository.create(new Loan(
+    loanRepository.create(new Loan(
         user3.id,
         copy8.id,
         vencido5dias
     ));
 
-    // Empréstimo já devolvido (não deve contar)
-    // loanService.createLoan({
-    //     user_id: user1.id,
-    //     copy_id: copy2.id,
-    //     data_entrega: Time.addDays(Time.nowInBrazil(), -5),
-    //     data_devolucao: Time.addDays(Time.nowInBrazil(), -2),
-    //     suspensao_ate: null,
-    // });
-
     console.log("✅ Seed de dados concluído");
 }
+
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+

@@ -4,7 +4,7 @@ export class Loan {
     id: number;
     usuario_id: number;
     estoque_id: number;
-    data_emprestimo: Date = new Date();
+    data_emprestimo: Date;
     data_devolucao?: Date;
     data_entrega?: Date;
     dias_atraso: number;

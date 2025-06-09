@@ -17,17 +17,14 @@ export class routineLoan {
             console.log(chalk.blue.bold("🔄 Atualizando status dos empréstimos..."));
 
             const today = Time.nowInBrazil();
- 
-            const suspensao70dias = Time.addDays(today, 70);
+
             const suspensionCountByUser: { [userId: number]: number } = {};
             const suspensionDaysByUser: { [userId: number]: number } = {};
 
-            const usersInSuspensionOrInactived = this.userRepository.list().filter(user =>
+            const usersIdsInSuspensionOrInactive = this.userRepository.list().filter(user =>
                 user.ativo === userActive.SUSPENSO ||
                 user.ativo === userActive.INATIVO
-            );
-
-            const usersIdsInSuspensionOrInactive = usersInSuspensionOrInactived.map(user => user.id);
+            ).map(user => user.id);
 
             const loans = this.loanService.listLoans().filter((loan) =>
                 !loan.data_devolucao &&

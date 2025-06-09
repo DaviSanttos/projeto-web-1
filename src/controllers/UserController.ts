@@ -22,12 +22,11 @@ export function createUser(req: Request, res: Response) {
 export function listUsers(req: Request, res: Response) {
     try {
         const users = userService.listUsers(req.query);
-        const userCategories = UserCategoryRepository.getInstance().list();
-        const couse = CourseRepository.getInstance().list();
+
         res.status(201).json(
             {
                 mensagem: "Lista de usuários encontrada!",
-                users, userCategories, couse
+                users
             }
         );
     } catch (error: any) {

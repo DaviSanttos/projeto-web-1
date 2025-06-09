@@ -1,3 +1,5 @@
+import { IdGenerator } from "../utils/IdGenerator";
+
 export enum userActive {
     ATIVO = 'ativo',
     INATIVO = 'inativo',
@@ -28,10 +30,6 @@ export class User {
         this.categoria_id = categoria_id;
         this.curso_id = curso_id;
         this.email = email;
-        this.id = this.geraId();
-    }
-
-    private geraId(): number {
-        return Date.now();
+        this.id = IdGenerator.generate();
     }
 }

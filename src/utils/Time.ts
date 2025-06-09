@@ -10,4 +10,10 @@ export class Time {
     result.setDate(result.getDate() + days);
     return result;
   }
+
+  static toBrazilTime(date: Date): Date {
+    const result = new Date(date);
+    result.setHours(result.getHours() - 3);
+    return result;
+  }
 }

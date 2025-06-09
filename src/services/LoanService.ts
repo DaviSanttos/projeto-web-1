@@ -99,4 +99,11 @@ export class LoanService {
 
         return filteredLoans;
     }
+
+    updateLoan(loan: Loan): void {
+        const existingLoan = this.loanRepository.findById(loan.id);
+        if (!existingLoan) throw new Error("Empréstimo não encontrado");
+        
+        this.loanRepository.updateOne(existingLoan);
+    }
 }

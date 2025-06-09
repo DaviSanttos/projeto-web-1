@@ -34,4 +34,12 @@ export class LoanRepository {
 
         return updatedLoan;
     }
+
+    updateOne(loan: Loan): Loan {
+        const index = this.loanlist.findIndex((l: Loan) => l.id === loan.id);
+        if (index === -1) throw new Error("Empréstimo não encontrado");
+
+        this.loanlist[index] = loan;
+        return loan;
+    }
 }

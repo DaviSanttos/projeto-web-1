@@ -117,4 +117,8 @@ export class UserService {
 
         return this.userRepository.deleteUserById(user.id);
     }
+
+    findById(id: number): User | undefined {
+        return this.userRepository.list().find(user => user.id === id);
+    }
 }

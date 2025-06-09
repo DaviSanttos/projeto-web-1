@@ -48,8 +48,6 @@ export class BookService {
     listBooks(params: any): Book[] {
         const bookList = this.bookRepository.list();
 
-        console.log(params)
-
         return bookList.filter((book: any) => {
             return (
                 (!params?.titulo || book.titulo.toLowerCase().includes(params.titulo.toLowerCase())) &&

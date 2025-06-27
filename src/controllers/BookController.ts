@@ -73,6 +73,16 @@ export function updateBookByIsbn(req: Request, res: Response) {
     try {
         const isbn = req.params.isbn;
 
+        const updateData = req.body;
+
+        bookRules.validate(
+            { titulo: updateData?.titulo, isRequiredField: false },
+            { autor: updateData?.autor, isRequiredField: false },
+            { editora: updateData?.editora, isRequiredField: false },
+            { edicao: updateData?.edicao, isRequiredField: false },
+            { categoria: updateData?.categoria, isRequiredField: false },
+        );
+
         const updatedBook = bookService.updateBookByIsbn(isbn, req.body);
 
         res.status(201).json(

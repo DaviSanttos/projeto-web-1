@@ -5,16 +5,16 @@ import { LoanService } from "../services/LoanService";
 import { UserService } from "../services/UserService";
 import { Time } from "../utils/Time";
 
-export class routineLoan {
+export class routineLoanSuspension {
     private loanService = new LoanService();
     private userService = new UserService();
     private userRepository = UserRepository.getInstance();
 
     start() {
-        console.log("⏱️ Loan job iniciado...");
+        console.log("Loan job iniciado...");
 
         setInterval(() => {
-            console.log(chalk.blue.bold("🔄 Atualizando status dos empréstimos..."));
+            console.log(chalk.blue.bold("Atualizando status dos empréstimos..."));
 
             const today = Time.nowInBrazil();
 

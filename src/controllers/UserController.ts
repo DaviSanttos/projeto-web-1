@@ -71,6 +71,19 @@ export function updateUserByCpf(req: Request, res: Response) {
     try {
         const cpf = req.params.cpf;
 
+        const nome = req.body?.nome;
+        const categoria = req.body?.categoria;
+        const curso = req.body?.curso;
+        const ativo = req.body?.ativo;
+
+        userRules.validate(
+            { cpf, isRequiredField: true },
+            { nome, isRequiredField: false },
+            { categoria, isRequiredField: false },
+            { curso, isRequiredField: false },
+            { ativo, isRequiredField: false }
+        );
+
         const updatedUser = userService.updateUserByCpf(cpf, req.body);
 
         res.status(201).json(

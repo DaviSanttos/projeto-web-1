@@ -76,17 +76,18 @@ export class BookService {
         const book = this.bookRepository.getByIsbn(isbn);
         if (!book) throw new Error("Livro nao encontrado");
 
-        if (!body.titulo || !body.autor || !body.editora || !body.edicao || !body.categoria) {
-            throw new Error("Informacoes incompletas");
-        }
+        const { titulo, autor, editora, edicao, categoria } = body;
+        // if (!body.titulo || !body.autor || !body.editora || !body.edicao || !body.categoria) {
+        //     throw new Error("Informacoes incompletas");
+        // }
 
-        const categoria_id = BookCategoryService.findBookCategoryIdByname(body.categoria);
+        const categoria_id = BookCategoryService.findBookCategoryIdByname(categoria);
 
         const bookUpdate: Partial<Book> = {
-            titulo: body.titulo,
-            autor: body.autor,
-            editora: body.editora,
-            edicao: body.edicao,
+            titulo,
+            autor,
+            editora,
+            edicao,
             categoria_id: categoria_id,
         }
 

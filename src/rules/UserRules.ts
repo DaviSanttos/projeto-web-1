@@ -1,5 +1,6 @@
 import requestCheck from 'request-check';
 import { is } from '../utils/isness';
+import { userActive } from '../models/UserModel';
 
 export default class UserRules {
   public validator;
@@ -26,6 +27,11 @@ export default class UserRules {
     this.validator.addRule('curso', {
       validator: (value: number) => is.string(value),
       message: 'curso inválido!',
+    });
+
+    this.validator.addRule('ativo', {
+      validator: (value: userActive) => Object.values(userActive).includes(value),
+      message: 'valor ativo inválido!',
     });
   }
 

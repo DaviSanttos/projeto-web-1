@@ -46,6 +46,10 @@ export function updateReturnDateById(req: Request, res: Response) {
     try {
         const id = req.params.id;
 
+        loanRules.validate(
+            { id, isRequiredField: true }
+        );
+
         const updatedLoan = loanService.updateReturnDateById(id);
 
         res.status(201).json(

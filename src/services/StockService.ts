@@ -43,8 +43,8 @@ export class StockService {
         return copy;
     }
 
-    updateAvailability(codigo: string, availaBility: boolean): Stock {
-        const copyId = parseInt(codigo);
+    updateAvailability(codigo: number, availaBility: boolean): Stock {
+        const copyId = codigo;
 
         const copy = this.stockRepository.findById(copyId);
         if (!copy) throw new Error("Exemplar não encontrado");

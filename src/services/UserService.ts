@@ -68,9 +68,9 @@ export class UserService {
     updateUserByCpf(cpf: string, body: any): User {
         validateCPF(cpf);
 
-        if (!userActiveValues.includes(body.ativo)) {
-            throw new Error("Status inválido. Valores válidos: " + userActiveValues.join(", "));
-        }
+        // if (!userActiveValues.includes(body.ativo)) {
+        //     throw new Error("Status inválido. Valores válidos: " + userActiveValues.join(", "));
+        // }
 
         const user = this.userRepository.findByCpf(cpf);
 

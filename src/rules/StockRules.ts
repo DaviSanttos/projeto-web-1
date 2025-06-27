@@ -17,6 +17,11 @@ export default class StockRules {
       validator: (value: number) => is.int(value),
       message: 'codigo_exemplar inválido!',
     });
+
+    this.validator.addRule('disponivel', {
+      validator: (value: boolean) => is.boolean(value),
+      message: 'disponibilidade inválida!',
+    });
   }
 
   public invalid(...args: Array<{ [key: string]: any; isRequiredField?: boolean } | null | undefined>): any {

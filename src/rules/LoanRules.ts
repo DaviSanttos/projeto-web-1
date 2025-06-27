@@ -17,6 +17,11 @@ export default class LoanRules {
       validator: (value: number) => is.int(value),
       message: 'codigo_exemplar inválido!',
     });
+
+    this.validator.addRule('id', {
+      validator: (value: number) => is.string(value),
+      message: 'identidicador do emprestimo inválido!',
+    });
   }
 
   public invalid(...args: Array<{ [key: string]: any; isRequiredField?: boolean } | null | undefined>): any {

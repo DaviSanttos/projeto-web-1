@@ -64,7 +64,12 @@ export function findCopyById(req: Request, res: Response) {
 
 export function updateAvailabilityById(req: Request, res: Response) {
     try {
-        const codigo = req.params.codigo;
+        const codigo = parseInt(req.params.codigo);
+
+        stockRules.validate(
+            { codigo_exemplar: codigo, isRequiredField: true },
+            { disponivel: req.body?.disponivel, isRequiredField: true }
+        );
 
         const updatedCopy = stockService.updateAvailability(codigo, req.body?.disponivel);
 

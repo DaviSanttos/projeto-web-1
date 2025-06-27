@@ -1,12 +1,12 @@
 import express from 'express';
 import router  from './routes';
-import { routineLoan } from './routines/routineLoan';
+import { routineLoanSuspension } from './routines/routineLoanSuspension';
 import { seedData } from './seed';
 
 const app = express();
 const PORT = 3090;
 
-const loanRoutine = new routineLoan();
+const loanSuspensionRoutine = new routineLoanSuspension();
 // loanRoutine.start();
 
 // seedData();

@@ -9,7 +9,7 @@ const PORT = 3090;
 const loanRoutine = new routineLoan();
 loanRoutine.start();
 
-seedData();
+// seedData();
 
 app.use(express.json());
 app.use('/library', router);

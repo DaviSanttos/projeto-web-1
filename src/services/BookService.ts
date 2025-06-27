@@ -9,19 +9,21 @@ export class BookService {
     bookRepository = BookRepository.getInstance();
 
     createBook(bookData: any): Book {
-        const titulo = bookData?.titulo;
-        const autor = bookData?.autor;
-        const editora = bookData?.editora;
-        const edicao = bookData?.edicao;
-        const isbn = bookData?.ISBN;
-        const categoria = bookData?.categoria;
+        // const titulo = bookData?.titulo;
+        // const autor = bookData?.autor;
+        // const editora = bookData?.editora;
+        // const edicao = bookData?.edicao;
+        // const isbn = bookData?.ISBN;
+        // const categoria = bookData?.categoria;
 
-        if (!titulo || !autor || !editora || !isbn || !categoria || !edicao) {
-            throw new Error("Informacoes incompletas");
-        }
+        // if (!titulo || !autor || !editora || !isbn || !categoria || !edicao) {
+        //     throw new Error("Informacoes incompletas");
+        // }
+        const { titulo, autor, editora, edicao, isbn, categoria } = bookData;
 
         const exists = this.bookRepository.existsByIsbn(isbn);
-        if (exists) throw new Error("Livro já cadastrado com esse ISBN");
+        console.log("exists", exists);
+        if (exists) throw new Error(`Livro já cadastrado com esse ISBN: ${isbn}`);
 
         const book = this.bookRepository.findBookByEditionPublisherAuthor({
             edicao: edicao,

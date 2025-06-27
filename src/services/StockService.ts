@@ -8,8 +8,9 @@ export class StockService {
     bookService = new BookService();
 
     createCopy(copyData: any): any {
-        const isbn = copyData?.ISBN;
-        const id = copyData?.codigo_exemplar;
+        // const isbn = copyData?.ISBN;
+        // const id = copyData?.codigo_exemplar;
+        const { ISBN: isbn, codigo_exemplar: id } = copyData;
 
         const livro_id = this.bookService.findBookByIsbn(isbn)?.id;
         if (!livro_id) throw new Error("Livro não encontrado com esse ISBN");

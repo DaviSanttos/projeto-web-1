@@ -14,12 +14,14 @@ export class LoanService {
     bookService = new BookService();
 
     createLoan(loanData: any): Loan {
-        const cpf = loanData?.cpf;
-        const codigo_exemplar = loanData?.codigo_exemplar;
+        // const cpf = loanData?.cpf;
+        // const codigo_exemplar = loanData?.codigo_exemplar;
 
-        if (!cpf || !codigo_exemplar) {
-            throw new Error("Informacoes incompletas");
-        }
+        // if (!cpf || !codigo_exemplar) {
+        //     throw new Error("Informacoes incompletas");
+        // }
+
+        const { cpf, codigo_exemplar} = loanData
 
         const user = this.userService.findUserByCpf(cpf);
         if (!user) throw new Error("Usuário não encontrado");

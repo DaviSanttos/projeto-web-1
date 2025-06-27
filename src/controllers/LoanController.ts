@@ -1,12 +1,22 @@
 import { Request, Response } from "express";
 import { LoanService } from "../services/LoanService";
-
+import LoanRules from "../rules/LoanRules";
 
 const loanService = new LoanService();
+const loanRules = new LoanRules()
 
 export function createLoan(req: Request, res: Response) {
     try {
-        const newLoan = loanService.createLoan(req.body);
+        const loanData = req.body;
+        const cpf = loanData?.cpf;
+        const codigo_exemplar = loanData?.codigo_exemplar;
+
+        loanRules.validate(
+            { cpf, isRequiredField: true },
+            { codigo_exemplar, isRequiredField: true }
+        );
+
+        const newLoan = loanService.createLoan(loanData);
         res.status(201).json(
             {
                 mensagem: "Empréstimo cadastrado com sucesso!",

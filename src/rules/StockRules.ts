@@ -1,41 +1,21 @@
 import requestCheck from 'request-check';
 import { is } from '../utils/isness';
 
-export default class BookRules {
+export default class StockRules {
   public validator;
 
   constructor() {
     this.validator = requestCheck();
     this.validator.requiredMessage = 'Campo obrigatório!';
 
-    this.validator.addRule('titulo', {
-      validator: (value: string) => is.string(value) && value.length > 0,
-      message: 'Título inválido!',
-    });
-
-    this.validator.addRule('autor', {
-      validator: (value: string) => is.string(value) && value.length > 0,
-      message: 'Autor inválido!',
-    });
-
     this.validator.addRule('isbn', {
       validator: (value: string) => is.string(value),
-      message: 'ISBN inválido!',
+      message: 'isbn inválido!',
     });
 
-    this.validator.addRule('editora', {
-      validator: (value: number) => is.string(value),
-      message: 'Editora inválida!',
-    });
-
-    this.validator.addRule('edicao', {
-      validator: (value: string) => is.string(value) && value.length > 0,
-      message: 'Edição inválida!',
-    });
-
-    this.validator.addRule('categoria', {
+    this.validator.addRule('codigo_exemplar', {
       validator: (value: number) => is.int(value),
-      message: 'Categoria inválida!',
+      message: 'codigo_exemplar inválido!',
     });
   }
 

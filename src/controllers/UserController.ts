@@ -2,11 +2,27 @@ import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { UserCategoryRepository } from "../repositories/UserCategoryRepository";
 import { CourseRepository } from "../repositories/CourseRepository";
+import UserRules from "../rules/UserRules";
 
 const userService = new UserService();
+const userRules = new UserRules();
 
 export function createUser(req: Request, res: Response) {
     try {
+        const userData = req.body;
+
+        const nome = userData?.nome;
+        const cpf = userData?.cpf;
+        const categoria = userData?.categoria;
+        const curso = userData?.curso;
+
+        userRules.validate(
+            { nome, isRequiredField: true },
+            { cpf, isRequiredField: true },
+            { categoria, isRequiredField: true },
+            { curso, isRequiredField: true }
+        );
+        
         const newUser = userService.createUser(req.body);
         res.status(201).json(
             {

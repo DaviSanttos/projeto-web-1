@@ -1,13 +1,25 @@
 import { Request, Response } from "express";
 import { BookService } from "../services/BookService";
 import { StockService } from "../services/StockService";
+import StockRules from "../rules/StockRules";
 
 
 const stockService = new StockService();
+const stockRules = new StockRules();
 
 export function createCopy(req: Request, res: Response) {
     try {
-        const newCopy = stockService.createCopy(req.body);
+        const stockData = req.body;
+
+        const isbn = stockData?.ISBN;
+        const codigo_exemplar = stockData?.codigo_exemplar;
+
+        stockRules.validate(
+            { ISBN: isbn, isRequiredField: true },
+            { codigo_exemplar, isRequiredField: true }
+        );
+
+        const newCopy = stockService.createCopy(stockData);
         res.status(201).json(
             {
                 mensagem: "Exemplar cadastrado com sucesso!",

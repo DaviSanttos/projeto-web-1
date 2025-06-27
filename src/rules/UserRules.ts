@@ -1,41 +1,31 @@
 import requestCheck from 'request-check';
 import { is } from '../utils/isness';
 
-export default class BookRules {
+export default class UserRules {
   public validator;
 
   constructor() {
     this.validator = requestCheck();
     this.validator.requiredMessage = 'Campo obrigatório!';
 
-    this.validator.addRule('titulo', {
+    this.validator.addRule('nome', {
       validator: (value: string) => is.string(value) && value.length > 0,
-      message: 'Título inválido!',
+      message: 'nome inválido!',
     });
 
-    this.validator.addRule('autor', {
-      validator: (value: string) => is.string(value) && value.length > 0,
-      message: 'Autor inválido!',
-    });
-
-    this.validator.addRule('isbn', {
+    this.validator.addRule('cpf', {
       validator: (value: string) => is.string(value),
-      message: 'ISBN inválido!',
-    });
-
-    this.validator.addRule('editora', {
-      validator: (value: number) => is.string(value),
-      message: 'Editora inválida!',
-    });
-
-    this.validator.addRule('edicao', {
-      validator: (value: string) => is.string(value) && value.length > 0,
-      message: 'Edição inválida!',
+      message: 'cpf inválido!',
     });
 
     this.validator.addRule('categoria', {
-      validator: (value: number) => is.int(value),
-      message: 'Categoria inválida!',
+      validator: (value: string) => is.string(value),
+      message: 'categoria inválida!',
+    });
+
+    this.validator.addRule('curso', {
+      validator: (value: number) => is.string(value),
+      message: 'curso inválido!',
     });
   }
 

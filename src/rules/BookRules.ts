@@ -34,7 +34,7 @@ export default class BookRules {
     });
 
     this.validator.addRule('categoria', {
-      validator: (value: number) => is.int(value),
+      validator: (value: number) => is.string(value),
       message: 'Categoria inválida!',
     });
   }

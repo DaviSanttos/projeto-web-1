@@ -19,11 +19,12 @@ export class BookService {
         // if (!titulo || !autor || !editora || !isbn || !categoria || !edicao) {
         //     throw new Error("Informacoes incompletas");
         // }
-        const { titulo, autor, editora, edicao, isbn, categoria } = bookData;
+        const { titulo, autor, editora, edicao, ISBN: isbn, categoria } = bookData;
+        console.log("bookData", bookData);
 
         const exists = this.bookRepository.existsByIsbn(isbn);
         console.log("exists", exists);
-        if (exists) throw new Error(`Livro já cadastrado com esse ISBN: ${isbn}`);
+        if (exists) throw new Error(`Livro já cadastrado com esse ISBN`);
 
         const book = this.bookRepository.findBookByEditionPublisherAuthor({
             edicao: edicao,

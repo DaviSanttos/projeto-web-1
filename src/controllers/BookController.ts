@@ -14,7 +14,7 @@ export function createBook(req: Request, res: Response) {
         const autor = bookData?.autor;
         const editora = bookData?.editora;
         const edicao = bookData?.edicao;
-        const isbn = bookData?.ISBN;
+        const ISBN = bookData?.ISBN;
         const categoria = bookData?.categoria;
 
         bookRules.validate(
@@ -22,11 +22,11 @@ export function createBook(req: Request, res: Response) {
             { autor, isRequiredField: true },
             { editora, isRequiredField: true },
             { edicao, isRequiredField: true },
-            { ISBN: isbn, isRequiredField: true },
+            { ISBN, isRequiredField: true },
             { categoria, isRequiredField: true }
         )
         
-        const newbook = bookService.createBook(req.body);
+        const newbook = bookService.createBook(bookData);
         res.status(201).json(
             {
                 mensagem: "Livro cadastrado com sucesso!",

@@ -7,7 +7,7 @@ const app = express();
 const PORT = 3090;
 
 const loanRoutine = new routineLoan();
-loanRoutine.start();
+// loanRoutine.start();
 
 // seedData();
 

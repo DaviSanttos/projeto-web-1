@@ -5,7 +5,7 @@ import { LoanService } from "../services/LoanService";
 import { UserService } from "../services/UserService";
 import { Time } from "../utils/Time";
 
-export class UserReactivationRoutine {
+export class routineUserReactivationRoutine {
     private loanService = new LoanService();
     private userService = new UserService();
     private userRepository = UserRepository.getInstance();
@@ -30,6 +30,8 @@ export class UserReactivationRoutine {
 
                 // Todos os empréstimos foram entregues?
                 const allReturned = userLoans.every(loan => !!loan.data_devolucao);
+
+                if(!allReturned) return;
 
                 // Todos possuem suspensão expirada (ou nenhuma suspensão)?
                 const allSuspensionsExpired = userLoans.every(loan => {

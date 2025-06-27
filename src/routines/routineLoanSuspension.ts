@@ -11,11 +11,9 @@ export class routineLoanSuspension {
     private userRepository = UserRepository.getInstance();
 
     start() {
-        console.log("Loan job iniciado...");
+        console.log("routineLoanSuspension job iniciado...");
 
         setInterval(() => {
-            console.log(chalk.blue.bold("Atualizando status dos empréstimos..."));
-
             const today = Time.nowInBrazil();
 
             const suspensionCountByUser: { [userId: number]: number } = {};
@@ -36,6 +34,7 @@ export class routineLoanSuspension {
             
             console.log(chalk.blue.bold("Empréstimos encontrados:", loans.length));
 
+            if (!loans.length) return null
             loans.forEach((loan) => {
                 const entrega = Time.toBrazilTime(loan.data_entrega);
 

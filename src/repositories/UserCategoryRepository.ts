@@ -1,5 +1,5 @@
-import { UserCategory } from "../models/UserCategoryModel";
-import { User } from "../models/UserModel";
+import { UserCategory } from "../models/entity/UserCategoryEntity";
+import { User } from "../models/entity/UserEntity";
 
 export class UserCategoryRepository {
     private static instance: UserCategoryRepository;

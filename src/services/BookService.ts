@@ -1,4 +1,4 @@
-import { Book } from "../models/BookModel";
+import { Book } from "../models/entity/BookEntity";
 import { BookRepository } from "../repositories/BookRepository";
 import BookCategoryService from "./BookCategoryService";
 import CourseService from "./CourseService";

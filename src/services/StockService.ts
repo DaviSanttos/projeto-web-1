@@ -1,5 +1,5 @@
-import { Book } from "../models/BookModel";
-import { Stock } from "../models/StockModel";
+import { Book } from "../models/entity/BookEntity";
+import { Stock } from "../models/entity/StockEntity";
 import { StockRepository } from "../repositories/StockRepository";
 import { BookService } from "./BookService";
 

@@ -1,6 +1,6 @@
-import { Book } from "../models/BookModel";
-import { Loan } from "../models/LoanModel";
-import { User, userActive } from "../models/UserModel";
+import { Book } from "../models/entity/BookEntity";
+import { Loan } from "../models/entity/LoanEntity";
+import { User, userActive } from "../models/entity/UserEntity";
 import { LoanRepository } from "../repositories/LoanRepository";
 import { Time } from "../utils/Time";
 import { BookService } from "./BookService";

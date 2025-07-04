@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { userActive } from "../models/UserModel";
+import { userActive } from "../models/entity/UserEntity";
 import { UserRepository } from "../repositories/UserRepository";
 import { LoanService } from "../services/LoanService";
 import { UserService } from "../services/UserService";

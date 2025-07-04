@@ -1,4 +1,4 @@
-import { User, userActive } from "../models/UserModel";
+import { User, userActive } from "../models/entity/UserEntity";
 
 export class UserRepository {
     private static instance: UserRepository;

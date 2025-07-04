@@ -4,7 +4,7 @@ import { LoanService } from "./services/LoanService";
 import { Time } from "./utils/Time";
 import { StockService } from "./services/StockService";
 import { LoanRepository } from "./repositories/LoanRepository";
-import { Loan } from "./models/LoanModel";
+import { Loan } from "./models/entity/LoanEntity";
 
 export function seedData() {
     const userService = new UserService();

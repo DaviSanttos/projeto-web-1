@@ -1,4 +1,4 @@
-import { UserCategory } from "../models/UserCategoryModel";
+import { UserCategory } from "../models/entity/UserCategoryEntity";
 import { UserCategoryRepository } from "../repositories/UserCategoryRepository";
 
 class UserCategoryService {

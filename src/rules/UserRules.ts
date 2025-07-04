@@ -1,6 +1,6 @@
 import requestCheck from 'request-check';
 import { is } from '../utils/isness';
-import { userActive } from '../models/UserModel';
+import { userActive } from '../models/entity/UserEntity';
 
 export default class UserRules {
   public validator;

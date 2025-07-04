@@ -1,4 +1,4 @@
-import { Course } from "../models/CourseModel";
+import { Course } from "../models/entity/CourseEntity";
 import { CourseRepository } from "../repositories/CourseRepository";
 
 class CourseService {

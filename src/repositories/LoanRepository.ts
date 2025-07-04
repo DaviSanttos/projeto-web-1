@@ -1,4 +1,4 @@
-import { Loan } from "../models/LoanModel";
+import { Loan } from "../models/entity/LoanEntity";
 
 
 export class LoanRepository {

@@ -1,5 +1,5 @@
-import { Loan } from "../models/LoanModel";
-import { User, userActiveValues } from "../models/UserModel";
+import { Loan } from "../models/entity/LoanEntity";
+import { User, userActiveValues } from "../models/entity/UserEntity";
 import { UserRepository } from "../repositories/UserRepository";
 import { validateCPF } from "../validators/validateCpf";
 import CourseService from "./CourseService";

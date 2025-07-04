@@ -1,4 +1,4 @@
-import { Time } from "../utils/Time";
+import { Time } from "../../utils/Time";
 
 export class Loan {
     id: number;

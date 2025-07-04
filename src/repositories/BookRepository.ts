@@ -1,4 +1,4 @@
-import { Book } from "../models/BookModel";
+import { Book } from "../models/entity/BookEntity";
 
 
 export class BookRepository {

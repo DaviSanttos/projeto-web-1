@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import { BookService } from "../services/BookService";
 import BookRules from "../rules/BookRules";
+import { Body , Controller , Delete , Get , Path , Post , Put , Query , Res , Route , Tags ,TsoaResponse } from "tsoa";
 
+@Route ("livros")
 
+// TODO parei aqui
 const bookService = new BookService();
 const bookRules = new BookRules();
 

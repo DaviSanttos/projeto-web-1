@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import userRoutes from './userRoutes';
-import bookRoutes from './bookRoutes';
+// import bookRoutes from './bookRoutes';
 import loanRoutes from './loanRoutes';
 import stockRoutes from './stockRoutes';
 import catalogRoutes from './catalogRoutes';
@@ -8,7 +8,7 @@ import catalogRoutes from './catalogRoutes';
 const router = Router();
 
 router.use('/usuarios', userRoutes);
-router.use('/livros', bookRoutes);
+// router.use('/livros', bookRoutes);
 router.use('/emprestimos', loanRoutes);
 router.use('/estoque', stockRoutes);
 router.use('/catalogos', catalogRoutes);

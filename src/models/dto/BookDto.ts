@@ -1,9 +1,9 @@
-export class ProductDto {
+export class BookDto {
     titulo: string;
     autor: number;
     editora: string;
     edicao: string;
-    isbn: string;
+    ISBN: string;
     categoria: string;
 
     constructor(
@@ -11,14 +11,14 @@ export class ProductDto {
         autor: number,
         editora: string,
         edicao: string,
-        isbn: string,
+        ISBN: string,
         categoria: string
     ) {
         this.titulo = titulo;
         this.autor = autor;
         this.editora = editora;
         this.edicao = edicao;
-        this.isbn = isbn;
+        this.ISBN = ISBN;
         this.categoria = categoria;
     }
 }

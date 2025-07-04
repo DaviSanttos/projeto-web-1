@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/index.ts",
+    "dev": "npx tsoa spec-and-routes && ts-node-dev src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -21,13 +21,12 @@
   "homepage": "https://github.com/DaviSanttos/projeto-web-1#readme",
   "dependencies": {
     "-": "^0.0.1",
+    "@types/swagger-jsdoc": "^6.0.4",
     "chalk": "^4.1.2",
-    "express": "^5.1.0",
+    "express": "^4.18.2",
     "request-check": "^1.5.4",
-    "swagger": "^0.7.5",
     "swagger-ui-express": "^5.0.1",
-    "tsoa": "^6.6.0",
-    "ui": "^0.2.4"
+    "tsoa": "^6.6.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.2",

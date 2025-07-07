@@ -9,7 +9,7 @@ app.use(express.json());
 
 const apiRouter = express.Router();
 RegisterRoutes(apiRouter);
-app.use('/api', apiRouter);
+app.use('/', apiRouter);
 
 setupSwagger(app);
 

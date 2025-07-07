@@ -1,26 +1,14 @@
 {
-    "entryFile": "src/index.ts",
-    "noImplicitAdditionalProperties": "throw-on-extras",
-    "controllerPathGlobs": [
-        "src/controllers/**/*.ts"
-    ],
-    "spec": {
-        "outputDirectory": "dist",
-        "specVersion": 3,
-        "specFileBaseName": "swagger",
-        "info": {
-            "title": "API Documentacao",
-            "version": "1.0.0",
-            "description": "Documentacao da API usando Swagger"
-        },
-        "servers": [
-            {
-                "url": "http://localhost:3090/api",
-                "description": "Servidor de Desenvolvimento"
-            }
-        ]
-    },
-    "routes": {
-        "routesDir": "src/route"
-    }
+  "entryFile": "src/index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/*.ts"],
+  "spec": {
+    "outputDirectory": "src",
+    "specVersion": 3,
+    "basePath": "/",
+    "outputFile": "swagger.json"
+  },
+  "routes": {
+    "routesDir": "src/routes"
+  }
 }

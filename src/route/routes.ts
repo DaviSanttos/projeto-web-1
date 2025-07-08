@@ -6,6 +6,8 @@ import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../controllers/UserController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { StockController } from './../controllers/StockController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { LoanController } from './../controllers/LoanController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BookController } from './../controllers/BookController';
@@ -58,6 +60,15 @@ const models: TsoaRoute.Models = {
             "categoria": {"ref":"UserCategoryName"},
             "curso": {"ref":"CourseName"},
             "status": {"ref":"userActive"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateStockDto": {
+        "dataType": "refObject",
+        "properties": {
+            "codigo_exemplar": {"dataType":"double","required":true},
+            "isbn": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -268,6 +279,162 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'deleteUserByCpf',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStockController_createCopy: Record<string, TsoaRoute.ParameterSchema> = {
+                dto: {"in":"body","name":"dto","required":true,"ref":"CreateStockDto"},
+                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"201","required":true,"ref":"BasicResponseDto"},
+        };
+        app.post('/estoque',
+            ...(fetchMiddlewares<RequestHandler>(StockController)),
+            ...(fetchMiddlewares<RequestHandler>(StockController.prototype.createCopy)),
+
+            async function StockController_createCopy(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStockController_createCopy, request, response });
+
+                const controller = new StockController();
+
+              await templateService.apiHandler({
+                methodName: 'createCopy',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStockController_listCopies: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/estoque',
+            ...(fetchMiddlewares<RequestHandler>(StockController)),
+            ...(fetchMiddlewares<RequestHandler>(StockController.prototype.listCopies)),
+
+            async function StockController_listCopies(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStockController_listCopies, request, response });
+
+                const controller = new StockController();
+
+              await templateService.apiHandler({
+                methodName: 'listCopies',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStockController_findCopyById: Record<string, TsoaRoute.ParameterSchema> = {
+                codigo: {"in":"path","name":"codigo","required":true,"dataType":"string"},
+        };
+        app.get('/estoque/:codigo',
+            ...(fetchMiddlewares<RequestHandler>(StockController)),
+            ...(fetchMiddlewares<RequestHandler>(StockController.prototype.findCopyById)),
+
+            async function StockController_findCopyById(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStockController_findCopyById, request, response });
+
+                const controller = new StockController();
+
+              await templateService.apiHandler({
+                methodName: 'findCopyById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStockController_updateAvailabilityById: Record<string, TsoaRoute.ParameterSchema> = {
+                codigo: {"in":"path","name":"codigo","required":true,"dataType":"double"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"disponivel":{"dataType":"boolean","required":true}}},
+                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
+        };
+        app.put('/estoque/:codigo',
+            ...(fetchMiddlewares<RequestHandler>(StockController)),
+            ...(fetchMiddlewares<RequestHandler>(StockController.prototype.updateAvailabilityById)),
+
+            async function StockController_updateAvailabilityById(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStockController_updateAvailabilityById, request, response });
+
+                const controller = new StockController();
+
+              await templateService.apiHandler({
+                methodName: 'updateAvailabilityById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStockController_deleteCopyById: Record<string, TsoaRoute.ParameterSchema> = {
+                codigo: {"in":"path","name":"codigo","required":true,"dataType":"string"},
+                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
+        };
+        app.delete('/estoque/:codigo',
+            ...(fetchMiddlewares<RequestHandler>(StockController)),
+            ...(fetchMiddlewares<RequestHandler>(StockController.prototype.deleteCopyById)),
+
+            async function StockController_deleteCopyById(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStockController_deleteCopyById, request, response });
+
+                const controller = new StockController();
+
+              await templateService.apiHandler({
+                methodName: 'deleteCopyById',
                 controller,
                 response,
                 next,

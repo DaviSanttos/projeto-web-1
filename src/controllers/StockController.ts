@@ -1,102 +1,103 @@
-import { Request, Response } from "express";
-import { BookService } from "../services/BookService";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Path,
+  Post,
+  Put,
+  Query,
+  Res,
+  Route,
+  Tags,
+  TsoaResponse
+} from "tsoa";
+
+import { CreateStockDto } from "../models/dto/CreateStockDto";
+import { BasicResponseDto } from "../models/dto/BasicResponseDto";
 import { StockService } from "../services/StockService";
 import StockRules from "../rules/StockRules";
 
+@Route("estoque")
+@Tags("estoque")
+export class StockController extends Controller {
+  private stockService = new StockService();
+  private stockRules = new StockRules();
 
-const stockService = new StockService();
-const stockRules = new StockRules();
-
-export function createCopy(req: Request, res: Response) {
+  @Post()
+  public async createCopy(
+    @Body() dto: CreateStockDto,
+    @Res() fail: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<201, BasicResponseDto>
+  ): Promise<void> {
     try {
-        const stockData = req.body;
+      const { codigo_exemplar, isbn } = dto;
 
-        const isbn = stockData?.ISBN;
-        const codigo_exemplar = stockData?.codigo_exemplar;
+      this.stockRules.validate(
+        { codigo_exemplar, isRequiredField: true },
+        { ISBN: isbn, isRequiredField: true }
+      );
 
-        stockRules.validate(
-            { ISBN: isbn, isRequiredField: true },
-            { codigo_exemplar, isRequiredField: true }
-        );
-
-        const newCopy = stockService.createCopy(stockData);
-        res.status(201).json(
-            {
-                mensagem: "Exemplar cadastrado com sucesso!",
-                copy: newCopy
-            }
-        );
+      const newCopy = this.stockService.createCopy(dto);
+      return success(201, new BasicResponseDto("Exemplar cadastrado com sucesso!", newCopy));
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return fail(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
 
-export function listCopies(req: Request, res: Response) {
+  @Get()
+  public async listCopies(): Promise<BasicResponseDto> {
     try {
-        const copies = stockService.listCopies();
-        res.status(201).json(
-            {
-                mensagem: "Lista de exemplares encontrada!",
-                copies
-            }
-        );
+      const copies = this.stockService.listCopies();
+      return new BasicResponseDto("Lista de exemplares encontrada!", copies);
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      throw new Error(error.message);
     }
-};
+  }
 
-export function findCopyById(req: Request, res: Response) {
+  @Get("{codigo}")
+  public async findCopyById(
+    @Path() codigo: string
+  ): Promise<BasicResponseDto> {
     try {
-        const codigo = req.params.codigo;
-        
-        const copy = stockService.findCopyById(codigo);
-
-        res.status(201).json(
-            {
-                mensagem: "Exemplar encontrado!",
-                copy
-            }
-        );
+      const copy = this.stockService.findCopyById(codigo);
+      return new BasicResponseDto("Exemplar encontrado!", copy);
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      throw new Error(error.message);
     }
-};
+  }
 
-export function updateAvailabilityById(req: Request, res: Response) {
+  @Put("{codigo}")
+  public async updateAvailabilityById(
+    @Path() codigo: number,
+    @Body() body: { disponivel: boolean },
+    @Res() fail: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
+  ): Promise<void> {
     try {
-        const codigo = parseInt(req.params.codigo);
+      this.stockRules.validate(
+        { codigo_exemplar: codigo, isRequiredField: true },
+        { disponivel: body.disponivel, isRequiredField: true }
+      );
 
-        stockRules.validate(
-            { codigo_exemplar: codigo, isRequiredField: true },
-            { disponivel: req.body?.disponivel, isRequiredField: true }
-        );
-
-        const updatedCopy = stockService.updateAvailability(codigo, req.body?.disponivel);
-
-        res.status(201).json(
-            {
-                mensagem: "Exemplar atualizado!",
-                updatedCopy
-            }
-        );
+      const updatedCopy = this.stockService.updateAvailability(codigo, body.disponivel);
+      return success(200, new BasicResponseDto("Exemplar atualizado!", updatedCopy));
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return fail(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
 
-export function deleteCopyById(req: Request, res: Response) {
+  @Delete("{codigo}")
+  public async deleteCopyById(
+    @Path() codigo: string,
+    @Res() fail: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
+  ): Promise<void> {
     try {
-        const codigo = req.params.codigo;
-
-        const deletedCopy = stockService.deleteCopyById(codigo);
-
-        res.status(201).json(
-            {
-                mensagem: "Exemplar deletado!",
-                deletedCopy
-            }
-        );
+      const deletedCopy = this.stockService.deleteCopyById(codigo);
+      return success(200, new BasicResponseDto("Exemplar deletado!", deletedCopy));
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return fail(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
+}

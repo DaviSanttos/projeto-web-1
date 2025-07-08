@@ -104,7 +104,7 @@ export function seedData() {
     ));
 
     sleep(25000).then(() => {
-        console.log("⏳ Aguardando 25 segundo para simular atraso...");
+        console.log("Aguardando 25 segundo para simular atraso...");
 
         const user4 = userService.createUser({
             nome: "Otavio",
@@ -134,7 +134,7 @@ export function seedData() {
         vencido5dias
     ));
 
-    console.log("✅ Seed de dados concluído");
+    console.log("Seed de dados concluído");
 }
 
 function sleep(ms: number) {

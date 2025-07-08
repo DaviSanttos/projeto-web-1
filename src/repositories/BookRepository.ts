@@ -13,7 +13,6 @@ export class BookRepository {
     }
 
     create(book: Book) {
-        console.log("Creating book:", book);
         this.booklist.push(book);
     }
 

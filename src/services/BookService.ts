@@ -10,10 +10,9 @@ export class BookService {
 
     createBook(bookData: any): Book {
         const { titulo, autor, editora, edicao, ISBN: isbn, categoria } = bookData;
-        console.log("bookData", bookData);
 
         const exists = this.bookRepository.existsByIsbn(isbn);
-        console.log("exists", exists);
+
         if (exists) throw new Error(`Livro já cadastrado com esse ISBN`);
 
         const book = this.bookRepository.findBookByEditionPublisherAuthor({
@@ -37,7 +36,6 @@ export class BookService {
             categoria_id
         );
 
-        console.log("newBook", newBook);
         this.bookRepository.create(newBook);
         return newBook;
     }

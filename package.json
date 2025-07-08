@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tsoa": "",
     "dev": "npx tsoa spec-and-routes && ts-node-dev src/index.ts",
-    "build": "npm run tsoa && tsc",
+    "build": "npx tsoa spec-and-routes && ts-node-dev src/index.ts",
     "start": "node dist/index.js"
   },
   "repository": {

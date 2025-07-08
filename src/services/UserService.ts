@@ -43,13 +43,19 @@ export class UserService {
     listUsers(params: any): User[] {
         const userList = this.userRepository.list();
 
+        let curso_id: number;
+        let categoria_id: number;
+        
+        if (params.curso) curso_id = this.courseService.findCourseIdByname(params?.curso);
+        if (params.categoria) categoria_id = this.userCategoryService.findUserCategoryIdByname(params?.categoria);
+
         return userList.filter((user: any) => {
             return (
                 (!params?.nome || user.nome.toLowerCase().includes(params.nome.toLowerCase())) &&
                 (!params?.cpf || user.cpf.includes(params.cpf)) &&
                 (!params?.ativo || user.ativo === params.ativo) &&
-                (!params?.categoria_id || user.categoria_id === parseInt(params.categoria_id)) &&
-                (!params?.curso_id || user.curso_id === params.curso_id)
+                (!categoria_id || user.categoria_id === categoria_id) &&
+                (!curso_id || user.curso_id === curso_id)
             );
         });
     }

@@ -7,7 +7,87 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"BookDto": {
+			"UserCategoryName": {
+				"enum": [
+					"Aluno",
+					"Professor",
+					"Bibliotecário"
+				],
+				"type": "string"
+			},
+			"CourseName": {
+				"enum": [
+					"ADS",
+					"Pedagogia",
+					"Administração"
+				],
+				"type": "string"
+			},
+			"CreateUserDto": {
+				"properties": {
+					"nome": {
+						"type": "string"
+					},
+					"cpf": {
+						"type": "string"
+					},
+					"categoria": {
+						"$ref": "#/components/schemas/UserCategoryName"
+					},
+					"curso": {
+						"$ref": "#/components/schemas/CourseName"
+					}
+				},
+				"required": [
+					"nome",
+					"cpf",
+					"categoria",
+					"curso"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BasicResponseDto": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"object": {}
+				},
+				"required": [
+					"message",
+					"object"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"userActive": {
+				"enum": [
+					"ativo",
+					"inativo",
+					"suspenso"
+				],
+				"type": "string"
+			},
+			"UpdateUserDto": {
+				"properties": {
+					"nome": {
+						"type": "string"
+					},
+					"categoria": {
+						"$ref": "#/components/schemas/UserCategoryName"
+					},
+					"curso": {
+						"$ref": "#/components/schemas/CourseName"
+					},
+					"status": {
+						"$ref": "#/components/schemas/userActive"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateBookDto": {
 				"properties": {
 					"titulo": {
 						"type": "string"
@@ -39,20 +119,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BasicResponseDto": {
-				"properties": {
-					"message": {
-						"type": "string"
-					},
-					"object": {}
-				},
-				"required": [
-					"message",
-					"object"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"BookCategoryEnum": {
 				"enum": [
 					"Romance",
@@ -62,7 +128,7 @@
 				],
 				"type": "string"
 			},
-			"Partial_BookDto_": {
+			"UpdateBookDto": {
 				"properties": {
 					"titulo": {
 						"type": "string"
@@ -76,15 +142,12 @@
 					"edicao": {
 						"type": "string"
 					},
-					"ISBN": {
-						"type": "string"
-					},
 					"categoria": {
 						"type": "string"
 					}
 				},
 				"type": "object",
-				"description": "Make all properties in T optional"
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -98,6 +161,271 @@
 		"contact": {}
 	},
 	"paths": {
+		"/usuarios": {
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "No content"
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"usuarios"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateUserDto"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "ListUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/BasicResponseDto"
+										},
+										{}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "nome",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "cpf",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categoria",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/UserCategoryName"
+						}
+					},
+					{
+						"in": "query",
+						"name": "curso",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CourseName"
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/userActive"
+						}
+					}
+				]
+			}
+		},
+		"/usuarios/{cpf}": {
+			"get": {
+				"operationId": "FindUserByCpf",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/BasicResponseDto"
+										},
+										{}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cpf",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateUserByCpf",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/BasicResponseDto"
+										},
+										{}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cpf",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateUserDto"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteUserByCpf",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/BasicResponseDto"
+										},
+										{}
+									]
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cpf",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/livros": {
 			"post": {
 				"operationId": "CreateBook",
@@ -136,7 +464,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/BookDto"
+								"$ref": "#/components/schemas/CreateBookDto"
 							}
 						}
 					}
@@ -324,7 +652,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Partial_BookDto_"
+								"$ref": "#/components/schemas/UpdateBookDto"
 							}
 						}
 					}

@@ -1,3 +1,9 @@
+export enum UserCategoryName {
+    ALUNO = "Aluno",
+    PROFESSOR = "Professor",
+    BIBLIOTECARIO = "Bibliotecário"
+}
+
 export class UserCategory {
     id: number;
     nome: string;

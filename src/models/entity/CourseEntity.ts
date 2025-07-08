@@ -1,3 +1,9 @@
+export enum CourseName {
+    ADS = "ADS",
+    PEDAGOGIA = "Pedagogia",
+    ADMINISTRACAO = "Administração"
+}
+
 export class Course {
     id: number;
     nome: string;

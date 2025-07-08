@@ -43,7 +43,8 @@ export class BookService {
     listBooks(params: any): Book[] {
         const bookList = this.bookRepository.list();
 
-        const categoria_id = BookCategoryService.findBookCategoryIdByname(params?.categoria);
+        let categoria_id: number;
+        if (params.categoria) categoria_id = BookCategoryService.findBookCategoryIdByname(params?.categoria);
 
         return bookList.filter((book: any) => {
             return (

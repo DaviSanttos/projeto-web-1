@@ -1,115 +1,118 @@
-import { Request, Response } from "express";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Path,
+  Post,
+  Put,
+  Query,
+  Res,
+  Route,
+  Tags,
+  TsoaResponse,
+} from "tsoa";
 import { UserService } from "../services/UserService";
-import { UserCategoryRepository } from "../repositories/UserCategoryRepository";
-import { CourseRepository } from "../repositories/CourseRepository";
+import { BasicResponseDto } from "../models/dto/BasicResponseDto";
 import UserRules from "../rules/UserRules";
+import { userActive } from "../models/entity/UserEntity";
+import { UserCategoryName } from "../models/entity/UserCategoryEntity";
+import { CourseName } from "../models/entity/CourseEntity";
+import { UpdateUserDto } from "../models/dto/UpdateUserDto";
+import { CreateUserDto } from "../models/dto/CreateUserDto";
 
-const userService = new UserService();
-const userRules = new UserRules();
+@Route("usuarios")
+@Tags("usuarios")
+export class UserController extends Controller {
+  private userService = new UserService();
+  private userRules = new UserRules();
 
-export function createUser(req: Request, res: Response) {
+  @Post()
+  public async createUser(
+    @Body() dto: CreateUserDto,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<201, BasicResponseDto>
+  ): Promise<void> {
     try {
-        const userData = req.body;
+      const { nome, cpf, categoria, curso } = dto;
 
-        const nome = userData?.nome;
-        const cpf = userData?.cpf;
-        const categoria = userData?.categoria;
-        const curso = userData?.curso;
+      this.userRules.validate(
+        { nome, isRequiredField: true },
+        { cpf, isRequiredField: true },
+        { categoria, isRequiredField: true },
+        { curso, isRequiredField: true }
+      );
 
-        userRules.validate(
-            { nome, isRequiredField: true },
-            { cpf, isRequiredField: true },
-            { categoria, isRequiredField: true },
-            { curso, isRequiredField: true }
-        );
-        
-        const newUser = userService.createUser(req.body);
-        res.status(201).json(
-            {
-                mensagem: "Usuário cadastrado com sucesso!",
-                user: newUser
-            }
-        );
+      const newUser = this.userService.createUser(dto);
+      return success(201, new BasicResponseDto("Usuário cadastrado com sucesso!", newUser));
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return badRequest(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
 
-export function listUsers(req: Request, res: Response) {
+  @Get()
+  public async listUsers(
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Query() nome?: string,
+    @Query() cpf?: string,
+    @Query() categoria?: UserCategoryName,
+    @Query() curso?: CourseName,
+    @Query() status?: userActive,
+  ): Promise<BasicResponseDto | void> {
     try {
-        const users = userService.listUsers(req.query);
-
-        res.status(201).json(
-            {
-                mensagem: "Lista de usuários encontrada!",
-                users
-            }
-        );
+      const users = this.userService.listUsers({ nome, cpf, categoria, curso, status });
+      return new BasicResponseDto("Lista de usuários encontrada!", users);
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return badRequest(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
 
-export function findUserByCpf(req: Request, res: Response) {
+  @Get("{cpf}")
+  public async findUserByCpf(
+    @Path() cpf: string,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>
+  ): Promise<BasicResponseDto | void> {
     try {
-        const cpf = req.params.cpf;
-        
-        const user = userService.findUserByCpf(cpf);
-
-        res.status(201).json(
-            {
-                mensagem: "usuário encontrada!",
-                user
-            }
-        );
+      const user = this.userService.findUserByCpf(cpf);
+      return new BasicResponseDto("Usuário encontrado!", user);
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return badRequest(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
 
-export function updateUserByCpf(req: Request, res: Response) {
+  @Put("{cpf}")
+  public async updateUserByCpf(
+    @Path() cpf: string,
+    @Body() updateData: UpdateUserDto,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>
+  ): Promise<BasicResponseDto | void> {
     try {
-        const cpf = req.params.cpf;
+      const { nome, categoria, curso, status } = updateData;
 
-        const nome = req.body?.nome;
-        const categoria = req.body?.categoria;
-        const curso = req.body?.curso;
-        const ativo = req.body?.ativo;
+      this.userRules.validate(
+        { nome, isRequiredField: false },
+        { categoria, isRequiredField: false },
+        { curso, isRequiredField: false },
+        { status, isRequiredField: false }
+      );
 
-        userRules.validate(
-            { cpf, isRequiredField: true },
-            { nome, isRequiredField: false },
-            { categoria, isRequiredField: false },
-            { curso, isRequiredField: false },
-            { ativo, isRequiredField: false }
-        );
-
-        const updatedUser = userService.updateUserByCpf(cpf, req.body);
-
-        res.status(201).json(
-            {
-                mensagem: "usuário atualizado!",
-                updatedUser
-            }
-        );
+      const updatedUser = this.userService.updateUserByCpf(cpf, updateData);
+      return new BasicResponseDto("Usuário atualizado!", updatedUser);
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return badRequest(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
 
-export function deleteUserByCpf(req: Request, res: Response) {
+  @Delete("{cpf}")
+  public async deleteUserByCpf(
+    @Path() cpf: string,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>
+  ): Promise<BasicResponseDto | void> {
     try {
-        const cpf = req.params.cpf;
-
-        const deletedUser = userService.deleteUserByCpf(cpf);
-
-        res.status(201).json(
-            {
-                mensagem: "usuário edeletado!",
-                deletedUser
-            }
-        );
+      const deletedUser = this.userService.deleteUserByCpf(cpf);
+      return new BasicResponseDto("Usuário deletado!", deletedUser);
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return badRequest(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
+}

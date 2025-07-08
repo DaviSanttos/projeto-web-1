@@ -5,8 +5,9 @@ import {
 import { BookService } from "../services/BookService";
 import BookRules from "../rules/BookRules";
 import { BasicResponseDto } from "../models/dto/BasicResponseDto";
-import { BookDto } from "../models/dto/BookDto";
 import { BookCategoryEnum } from "../models/entity/BookCategoryEntity";
+import { CreateBookDto } from "../models/dto/CreateBookDto";
+import { UpdateBookDto } from "../models/dto/UpdateBookDto";
 
 @Route("livros")
 @Tags("livros")
@@ -16,7 +17,7 @@ export class BookController extends Controller {
 
   @Post()
   public async createBook(
-    @Body() dto: BookDto,
+    @Body() dto: CreateBookDto,
     @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
     @Res() success: TsoaResponse<201, BasicResponseDto>
   ): Promise<void> {
@@ -81,7 +82,7 @@ export class BookController extends Controller {
   @Put("{isbn}")
   public async updateBookByIsbn(
     @Path() isbn: string,
-    @Body() updateData: Partial<BookDto>,
+    @Body() updateData: UpdateBookDto,
     @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
     @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<void> {

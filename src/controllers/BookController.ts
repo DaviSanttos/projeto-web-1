@@ -1,8 +1,11 @@
-import { Body, Controller, Post, Res, Route, Tags, TsoaResponse } from "tsoa";
+import { 
+  Body, Controller, Delete, Get, Path, Post, Put, 
+  Res, Route, Tags, TsoaResponse, Query 
+} from "tsoa";
 import { BookService } from "../services/BookService";
 import BookRules from "../rules/BookRules";
-import { BookDto } from "../models/dto/BookDto";
 import { BasicResponseDto } from "../models/dto/BasicResponseDto";
+import { BookDto } from "../models/dto/BookDto";
 
 @Route("livros")
 @Tags("livros")
@@ -13,134 +16,95 @@ export class BookController extends Controller {
   @Post()
   public async createBook(
     @Body() dto: BookDto,
-    @Res() fail: TsoaResponse<400, BasicResponseDto>,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
     @Res() success: TsoaResponse<201, BasicResponseDto>
   ): Promise<void> {
     try {
-      const { titulo, autor, editora, edicao, ISBN, categoria } = dto;
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-
       this.bookRules.validate(
-        { titulo, isRequiredField: true },
-        { autor, isRequiredField: true },
-        { editora, isRequiredField: true },
-        { edicao, isRequiredField: true },
-        { ISBN, isRequiredField: true },
-        { categoria, isRequiredField: true }
+        { titulo: dto.titulo, isRequiredField: true },
+        { autor: dto.autor, isRequiredField: true },
+        { editora: dto.editora, isRequiredField: true },
+        { edicao: dto.edicao, isRequiredField: true },
+        { ISBN: dto.ISBN, isRequiredField: true },
+        { categoria: dto.categoria, isRequiredField: true }
       );
 
       const newBook = await this.bookService.createBook(dto);
-
-      return success(201, new BasicResponseDto("Produto criado com sucesso!", newBook));
+      return success(201, new BasicResponseDto("Livro criado com sucesso!", newBook));
     } catch (error: any) {
-      return fail(400, new BasicResponseDto(error.messag, error));
+      return badRequest(400, new BasicResponseDto(error.message, error));
+    }
+  }
+
+  @Get()
+  public async listBooks(
+    @Res() notFound: TsoaResponse<404, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>,
+    @Query() filter?: any
+  ): Promise<void> {
+    try {
+      const books = await this.bookService.listBooks(filter);
+
+      return success(200, new BasicResponseDto("Lista de livros encontrada!", books));
+    } catch (error: any) {
+      return notFound(404, new BasicResponseDto(error.message, error));
+    }
+  }
+
+  @Get("{isbn}")
+  public async findBookByIsbn(
+    @Path() isbn: string,
+    @Res() notFound: TsoaResponse<404, BasicResponseDto>,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
+  ): Promise<void> {
+    try {
+      const book = await this.bookService.findBookByIsbn(isbn);
+
+      if (!book) {
+        return notFound(404, new BasicResponseDto("Livro não encontrado", null));
+      }
+
+      return success(200, new BasicResponseDto("Livro encontrado!", book));
+    } catch (error: any) {
+      return badRequest(400, new BasicResponseDto(error.message, error));
+    }
+  }
+
+  @Put("{isbn}")
+  public async updateBookByIsbn(
+    @Path() isbn: string,
+    @Body() updateData: Partial<BookDto>,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
+  ): Promise<void> {
+    try {
+      this.bookRules.validate(
+        { titulo: updateData?.titulo, isRequiredField: false },
+        { autor: updateData?.autor, isRequiredField: false },
+        { editora: updateData?.editora, isRequiredField: false },
+        { edicao: updateData?.edicao, isRequiredField: false },
+        { categoria: updateData?.categoria, isRequiredField: false }
+      );
+
+      const updatedBook = await this.bookService.updateBookByIsbn(isbn, updateData);
+      return success(200, new BasicResponseDto("Livro atualizado!", updatedBook));
+    } catch (error: any) {
+      return badRequest(400, new BasicResponseDto(error.message, error));
+    }
+  }
+
+  @Delete("{isbn}")
+  public async deleteBookByIsbn(
+    @Path() isbn: string,
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
+  ): Promise<void> {
+    try {
+      const deletedBook = await this.bookService.deleteBookByIsbn(isbn);
+      return success(200, new BasicResponseDto("Livro deletado!", deletedBook));
+    } catch (error: any) {
+      return badRequest(400, new BasicResponseDto(error.message, error));
     }
   }
 }
-
-// export function createBook(req: Request, res: Response) {
-//     try {
-//         const bookData = req.body;
-
-//         const titulo = bookData?.titulo;
-//         const autor = bookData?.autor;
-//         const editora = bookData?.editora;
-//         const edicao = bookData?.edicao;
-//         const ISBN = bookData?.ISBN;
-//         const categoria = bookData?.categoria;
-
-//         bookRules.validate(
-//             { titulo, isRequiredField: true },
-//             { autor, isRequiredField: true },
-//             { editora, isRequiredField: true },
-//             { edicao, isRequiredField: true },
-//             { ISBN, isRequiredField: true },
-//             { categoria, isRequiredField: true }
-//         )
-        
-//         const newbook = bookService.createBook(bookData);
-//         res.status(201).json(
-//             {
-//                 mensagem: "Livro cadastrado com sucesso!",
-//                 book: newbook
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
-
-// export function listBooks(req: Request, res: Response) {
-//     try {
-//         const books = bookService.listBooks(req.query);
-//         res.status(201).json(
-//             {
-//                 mensagem: "Lista de livros encontrada!",
-//                 books
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
-
-// export function findBookByIsbn(req: Request, res: Response) {
-//     try {
-//         const isbn = req.params.isbn;
-        
-//         const book = bookService.findBookByIsbn(isbn);
-
-//         res.status(201).json(
-//             {
-//                 mensagem: "livro encontrado!",
-//                 book
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
-
-// export function updateBookByIsbn(req: Request, res: Response) {
-//     try {
-//         const isbn = req.params.isbn;
-
-//         const updateData = req.body;
-
-//         bookRules.validate(
-//             { titulo: updateData?.titulo, isRequiredField: false },
-//             { autor: updateData?.autor, isRequiredField: false },
-//             { editora: updateData?.editora, isRequiredField: false },
-//             { edicao: updateData?.edicao, isRequiredField: false },
-//             { categoria: updateData?.categoria, isRequiredField: false },
-//         );
-
-//         const updatedBook = bookService.updateBookByIsbn(isbn, req.body);
-
-//         res.status(201).json(
-//             {
-//                 mensagem: "livro atualizado!",
-//                 updatedBook
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };
-
-// export function deleteBookByIsbn(req: Request, res: Response) {
-//     try {
-//         const isbn = req.params.isbn;
-
-//         const deletedBook = bookService.deleteBookByIsbn(isbn);
-
-//         res.status(201).json(
-//             {
-//                 mensagem: "Livro deletado!",
-//                 deletedBook
-//             }
-//         );
-//     } catch (error: any) {
-//         res.status(400).json({ message: error.message });
-//     }
-// };

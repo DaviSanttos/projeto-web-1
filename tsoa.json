@@ -9,6 +9,6 @@
     "outputFile": "swagger.json"
   },
   "routes": {
-    "routesDir": "src/routes"
+    "routesDir": "src/route"
   }
 }

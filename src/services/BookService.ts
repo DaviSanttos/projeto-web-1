@@ -9,16 +9,6 @@ export class BookService {
     bookRepository = BookRepository.getInstance();
 
     createBook(bookData: any): Book {
-        // const titulo = bookData?.titulo;
-        // const autor = bookData?.autor;
-        // const editora = bookData?.editora;
-        // const edicao = bookData?.edicao;
-        // const isbn = bookData?.ISBN;
-        // const categoria = bookData?.categoria;
-
-        // if (!titulo || !autor || !editora || !isbn || !categoria || !edicao) {
-        //     throw new Error("Informacoes incompletas");
-        // }
         const { titulo, autor, editora, edicao, ISBN: isbn, categoria } = bookData;
         console.log("bookData", bookData);
 
@@ -36,6 +26,8 @@ export class BookService {
         
         const categoria_id = BookCategoryService.findBookCategoryIdByname(categoria);
 
+        if (!categoria_id) throw new Error("Categoria não encontrada");
+
         const newBook = new Book(
             titulo,
             autor,
@@ -44,6 +36,8 @@ export class BookService {
             isbn,
             categoria_id
         );
+
+        console.log("newBook", newBook);
         this.bookRepository.create(newBook);
         return newBook;
     }

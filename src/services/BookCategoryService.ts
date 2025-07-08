@@ -8,7 +8,7 @@ class BookCategoryService {
         if (!name) throw new Error("sem nome de categoria");
 
         const bookCategory = this.bookCategoryRepository.getIdByName(name);
-
+        
         if (!bookCategory) throw new Error("Categoria nao encontrada");
         return bookCategory;
     }

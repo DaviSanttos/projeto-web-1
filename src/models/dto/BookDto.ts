@@ -1,6 +1,6 @@
 export class BookDto {
     titulo: string;
-    autor: number;
+    autor: string;
     editora: string;
     edicao: string;
     ISBN: string;
@@ -8,7 +8,7 @@ export class BookDto {
 
     constructor(
         titulo: string,
-        autor: number,
+        autor: string,
         editora: string,
         edicao: string,
         ISBN: string,

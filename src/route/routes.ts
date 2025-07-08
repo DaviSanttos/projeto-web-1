@@ -34,6 +34,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BookCategoryEnum": {
+        "dataType": "refEnum",
+        "enums": ["Romance","Computação","Letras","Gestão"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_BookDto_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"titulo":{"dataType":"string"},"autor":{"dataType":"string"},"editora":{"dataType":"string"},"edicao":{"dataType":"string"},"ISBN":{"dataType":"string"},"categoria":{"dataType":"string"}},"validators":{}},
@@ -58,7 +63,7 @@ export function RegisterRoutes(app: Router) {
     
         const argsBookController_createBook: Record<string, TsoaRoute.ParameterSchema> = {
                 dto: {"in":"body","name":"dto","required":true,"ref":"BookDto"},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"201","required":true,"ref":"BasicResponseDto"},
         };
         app.post('/livros',
@@ -89,9 +94,14 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBookController_listBooks: Record<string, TsoaRoute.ParameterSchema> = {
-                fail: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
+                notFound: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
-                filter: {"in":"query","name":"filter","dataType":"any"},
+                titulo: {"in":"query","name":"titulo","dataType":"string"},
+                isbn: {"in":"query","name":"isbn","dataType":"string"},
+                autor: {"in":"query","name":"autor","dataType":"string"},
+                editora: {"in":"query","name":"editora","dataType":"string"},
+                edicao: {"in":"query","name":"edicao","dataType":"string"},
+                categoria: {"in":"query","name":"categoria","ref":"BookCategoryEnum"},
         };
         app.get('/livros',
             ...(fetchMiddlewares<RequestHandler>(BookController)),
@@ -122,7 +132,8 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBookController_findBookByIsbn: Record<string, TsoaRoute.ParameterSchema> = {
                 isbn: {"in":"path","name":"isbn","required":true,"dataType":"string"},
-                fail: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
+                notFound: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.get('/livros/:isbn',
@@ -155,7 +166,7 @@ export function RegisterRoutes(app: Router) {
         const argsBookController_updateBookByIsbn: Record<string, TsoaRoute.ParameterSchema> = {
                 isbn: {"in":"path","name":"isbn","required":true,"dataType":"string"},
                 updateData: {"in":"body","name":"updateData","required":true,"ref":"Partial_BookDto_"},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.put('/livros/:isbn',
@@ -187,7 +198,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBookController_deleteBookByIsbn: Record<string, TsoaRoute.ParameterSchema> = {
                 isbn: {"in":"path","name":"isbn","required":true,"dataType":"string"},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.delete('/livros/:isbn',

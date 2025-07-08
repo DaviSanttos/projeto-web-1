@@ -53,6 +53,15 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BookCategoryEnum": {
+				"enum": [
+					"Romance",
+					"Computação",
+					"Letras",
+					"Gestão"
+				],
+				"type": "string"
+			},
 			"Partial_BookDto_": {
 				"properties": {
 					"titulo": {
@@ -167,10 +176,50 @@
 				"parameters": [
 					{
 						"in": "query",
-						"name": "filter",
+						"name": "titulo",
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "isbn",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "autor",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "editora",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "edicao",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categoria",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/BookCategoryEnum"
 						}
 					}
 				]
@@ -192,6 +241,16 @@
 					},
 					"204": {
 						"description": "No content"
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
 					},
 					"404": {
 						"description": "",

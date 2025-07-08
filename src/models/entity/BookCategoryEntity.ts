@@ -1,3 +1,10 @@
+export enum BookCategoryEnum {
+    ROMANCE = "Romance",
+    COMPUTACAO = "Computação",
+    LETRAS = "Letras",
+    GESTAO = "Gestão"
+}
+
 export class BookCategory {
     id: number;
     nome: string;

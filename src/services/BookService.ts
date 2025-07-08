@@ -45,6 +45,8 @@ export class BookService {
     listBooks(params: any): Book[] {
         const bookList = this.bookRepository.list();
 
+        const categoria_id = BookCategoryService.findBookCategoryIdByname(params?.categoria);
+
         return bookList.filter((book: any) => {
             return (
                 (!params?.titulo || book.titulo.toLowerCase().includes(params.titulo.toLowerCase())) &&
@@ -52,7 +54,7 @@ export class BookService {
                 (!params?.editora || book.editora.toLowerCase().includes(params.editora.toLowerCase())) &&
                 (!params?.edicao || book.edicao.toLowerCase().includes(params.edicao.toLowerCase())) &&
                 (!params?.isbn || book.isbn.toLowerCase().includes(params.isbn.toLowerCase())) &&
-                (!params?.categoria_id || book.categoria_id === parseInt(params.categoria_id))
+                (!categoria_id || book.categoria_id === categoria_id)
             );
         });
     }

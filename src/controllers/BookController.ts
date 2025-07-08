@@ -6,6 +6,7 @@ import { BookService } from "../services/BookService";
 import BookRules from "../rules/BookRules";
 import { BasicResponseDto } from "../models/dto/BasicResponseDto";
 import { BookDto } from "../models/dto/BookDto";
+import { BookCategoryEnum } from "../models/entity/BookCategoryEntity";
 
 @Route("livros")
 @Tags("livros")
@@ -40,10 +41,16 @@ export class BookController extends Controller {
   public async listBooks(
     @Res() notFound: TsoaResponse<404, BasicResponseDto>,
     @Res() success: TsoaResponse<200, BasicResponseDto>,
-    @Query() filter?: any
+    @Query() titulo?: string,
+    @Query() isbn?: string,
+    @Query() autor?: string,
+    @Query() editora?: string,
+    @Query() edicao?: string,
+    @Query() categoria?: BookCategoryEnum,
   ): Promise<void> {
     try {
-      const books = await this.bookService.listBooks(filter);
+      const filters = { titulo, isbn, autor, editora, edicao, categoria };
+      const books = await this.bookService.listBooks(filters);
 
       return success(200, new BasicResponseDto("Lista de livros encontrada!", books));
     } catch (error: any) {

@@ -1,3 +1,10 @@
+export interface BookFilter {
+  autor?: string;
+  categoria?: string;
+  titulo?: string;
+  // adicione outros filtros que sua API aceitar
+}
+
 export class BookDto {
     titulo: string;
     autor: string;

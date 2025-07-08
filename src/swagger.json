@@ -243,16 +243,11 @@
 				"operationId": "ListUsers",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
-									"anyOf": [
-										{
-											"$ref": "#/components/schemas/BasicResponseDto"
-										},
-										{}
-									]
+									"$ref": "#/components/schemas/BasicResponseDto"
 								}
 							}
 						}
@@ -321,16 +316,11 @@
 				"operationId": "FindUserByCpf",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
-									"anyOf": [
-										{
-											"$ref": "#/components/schemas/BasicResponseDto"
-										},
-										{}
-									]
+									"$ref": "#/components/schemas/BasicResponseDto"
 								}
 							}
 						}
@@ -365,16 +355,11 @@
 				"operationId": "UpdateUserByCpf",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
-									"anyOf": [
-										{
-											"$ref": "#/components/schemas/BasicResponseDto"
-										},
-										{}
-									]
+									"$ref": "#/components/schemas/BasicResponseDto"
 								}
 							}
 						}
@@ -419,16 +404,11 @@
 				"operationId": "DeleteUserByCpf",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
-									"anyOf": [
-										{
-											"$ref": "#/components/schemas/BasicResponseDto"
-										},
-										{}
-									]
+									"$ref": "#/components/schemas/BasicResponseDto"
 								}
 							}
 						}
@@ -508,7 +488,17 @@
 				"operationId": "ListCopies",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -530,7 +520,17 @@
 				"operationId": "FindCopyById",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -629,10 +629,7 @@
 							}
 						}
 					},
-					"204": {
-						"description": "No content"
-					},
-					"400": {
+					"404": {
 						"description": "",
 						"content": {
 							"application/json": {
@@ -707,7 +704,17 @@
 				"operationId": "ListLoans",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -741,7 +748,7 @@
 					"204": {
 						"description": "No content"
 					},
-					"400": {
+					"404": {
 						"description": "",
 						"content": {
 							"application/json": {

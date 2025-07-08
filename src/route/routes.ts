@@ -163,6 +163,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsUserController_listUsers: Record<string, TsoaRoute.ParameterSchema> = {
                 badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
                 nome: {"in":"query","name":"nome","dataType":"string"},
                 cpf: {"in":"query","name":"cpf","dataType":"string"},
                 categoria: {"in":"query","name":"categoria","ref":"UserCategoryName"},
@@ -199,6 +200,7 @@ export function RegisterRoutes(app: Router) {
         const argsUserController_findUserByCpf: Record<string, TsoaRoute.ParameterSchema> = {
                 cpf: {"in":"path","name":"cpf","required":true,"dataType":"string"},
                 badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.get('/usuarios/:cpf',
             ...(fetchMiddlewares<RequestHandler>(UserController)),
@@ -231,6 +233,7 @@ export function RegisterRoutes(app: Router) {
                 cpf: {"in":"path","name":"cpf","required":true,"dataType":"string"},
                 updateData: {"in":"body","name":"updateData","required":true,"ref":"UpdateUserDto"},
                 badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.put('/usuarios/:cpf',
             ...(fetchMiddlewares<RequestHandler>(UserController)),
@@ -262,6 +265,7 @@ export function RegisterRoutes(app: Router) {
         const argsUserController_deleteUserByCpf: Record<string, TsoaRoute.ParameterSchema> = {
                 cpf: {"in":"path","name":"cpf","required":true,"dataType":"string"},
                 badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.delete('/usuarios/:cpf',
             ...(fetchMiddlewares<RequestHandler>(UserController)),
@@ -292,7 +296,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsStockController_createCopy: Record<string, TsoaRoute.ParameterSchema> = {
                 dto: {"in":"body","name":"dto","required":true,"ref":"CreateStockDto"},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"201","required":true,"ref":"BasicResponseDto"},
         };
         app.post('/estoque',
@@ -323,6 +327,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsStockController_listCopies: Record<string, TsoaRoute.ParameterSchema> = {
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.get('/estoque',
             ...(fetchMiddlewares<RequestHandler>(StockController)),
@@ -353,6 +359,8 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsStockController_findCopyById: Record<string, TsoaRoute.ParameterSchema> = {
                 codigo: {"in":"path","name":"codigo","required":true,"dataType":"string"},
+                badRequest: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.get('/estoque/:codigo',
             ...(fetchMiddlewares<RequestHandler>(StockController)),
@@ -384,7 +392,7 @@ export function RegisterRoutes(app: Router) {
         const argsStockController_updateAvailabilityById: Record<string, TsoaRoute.ParameterSchema> = {
                 codigo: {"in":"path","name":"codigo","required":true,"dataType":"double"},
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"disponivel":{"dataType":"boolean","required":true}}},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.put('/estoque/:codigo',
@@ -416,7 +424,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsStockController_deleteCopyById: Record<string, TsoaRoute.ParameterSchema> = {
                 codigo: {"in":"path","name":"codigo","required":true,"dataType":"string"},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.delete('/estoque/:codigo',
@@ -448,7 +456,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsLoanController_createLoan: Record<string, TsoaRoute.ParameterSchema> = {
                 dto: {"in":"body","name":"dto","required":true,"ref":"CreateLoanDto"},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"201","required":true,"ref":"BasicResponseDto"},
         };
         app.post('/emprestimos',
@@ -479,6 +487,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsLoanController_listLoans: Record<string, TsoaRoute.ParameterSchema> = {
+                badRequest: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
+                success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.get('/emprestimos',
             ...(fetchMiddlewares<RequestHandler>(LoanController)),
@@ -509,7 +519,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsLoanController_updateReturnDateById: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
-                fail: {"in":"res","name":"400","required":true,"ref":"BasicResponseDto"},
+                badRequest: {"in":"res","name":"404","required":true,"ref":"BasicResponseDto"},
                 success: {"in":"res","name":"200","required":true,"ref":"BasicResponseDto"},
         };
         app.put('/emprestimos/:id/devolucao',

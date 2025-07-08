@@ -53,6 +53,7 @@ export class UserController extends Controller {
   @Get()
   public async listUsers(
     @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>,
     @Query() nome?: string,
     @Query() cpf?: string,
     @Query() categoria?: UserCategoryName,
@@ -61,7 +62,7 @@ export class UserController extends Controller {
   ): Promise<BasicResponseDto | void> {
     try {
       const users = this.userService.listUsers({ nome, cpf, categoria, curso, status });
-      return new BasicResponseDto("Lista de usuários encontrada!", users);
+      return success(200, new BasicResponseDto("Lista de usuários encontrada!", users));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
     }
@@ -70,11 +71,12 @@ export class UserController extends Controller {
   @Get("{cpf}")
   public async findUserByCpf(
     @Path() cpf: string,
-    @Res() badRequest: TsoaResponse<400, BasicResponseDto>
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto | void> {
     try {
       const user = this.userService.findUserByCpf(cpf);
-      return new BasicResponseDto("Usuário encontrado!", user);
+      return success(200, new BasicResponseDto("Usuário encontrado!", user));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
     }
@@ -84,7 +86,8 @@ export class UserController extends Controller {
   public async updateUserByCpf(
     @Path() cpf: string,
     @Body() updateData: UpdateUserDto,
-    @Res() badRequest: TsoaResponse<400, BasicResponseDto>
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto | void> {
     try {
       const { nome, categoria, curso, status } = updateData;
@@ -97,7 +100,7 @@ export class UserController extends Controller {
       );
 
       const updatedUser = this.userService.updateUserByCpf(cpf, updateData);
-      return new BasicResponseDto("Usuário atualizado!", updatedUser);
+      return success(200, new BasicResponseDto("Usuário atualizado!", updatedUser));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
     }
@@ -106,11 +109,12 @@ export class UserController extends Controller {
   @Delete("{cpf}")
   public async deleteUserByCpf(
     @Path() cpf: string,
-    @Res() badRequest: TsoaResponse<400, BasicResponseDto>
+    @Res() badRequest: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto | void> {
     try {
       const deletedUser = this.userService.deleteUserByCpf(cpf);
-      return new BasicResponseDto("Usuário deletado!", deletedUser);
+      return success(200, new BasicResponseDto("Usuário deletado!", deletedUser));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
     }

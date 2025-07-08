@@ -87,6 +87,23 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CreateLoanDto": {
+				"properties": {
+					"codigo_exemplar": {
+						"type": "number",
+						"format": "double"
+					},
+					"cpf": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"codigo_exemplar",
+					"cpf"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateBookDto": {
 				"properties": {
 					"titulo": {
@@ -418,6 +435,115 @@
 					{
 						"in": "path",
 						"name": "cpf",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/emprestimos": {
+			"post": {
+				"operationId": "CreateLoan",
+				"responses": {
+					"201": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "No content"
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"emprestimos"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateLoanDto"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "ListLoans",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"emprestimos"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/emprestimos/{id}/devolucao": {
+			"put": {
+				"operationId": "UpdateReturnDateById",
+				"responses": {
+					"200": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "No content"
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BasicResponseDto"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"emprestimos"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
 						"required": true,
 						"schema": {
 							"type": "string"

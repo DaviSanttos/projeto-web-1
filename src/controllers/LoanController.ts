@@ -1,64 +1,71 @@
-import { Request, Response } from "express";
+import {
+  Body,
+  Controller,
+  Get,
+  Path,
+  Post,
+  Put,
+  Res,
+  Route,
+  Tags,
+  TsoaResponse
+} from "tsoa";
+
 import { LoanService } from "../services/LoanService";
 import LoanRules from "../rules/LoanRules";
+import { CreateLoanDto } from "../models/dto/CreateLoanDto";
+import { BasicResponseDto } from "../models/dto/BasicResponseDto";
 
-const loanService = new LoanService();
-const loanRules = new LoanRules()
+@Route("emprestimos")
+@Tags("emprestimos")
+export class LoanController extends Controller {
+  private loanService = new LoanService();
+  private loanRules = new LoanRules();
 
-export function createLoan(req: Request, res: Response) {
+  @Post()
+  public async createLoan(
+    @Body() dto: CreateLoanDto,
+    @Res() fail: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<201, BasicResponseDto>
+  ): Promise<void> {
     try {
-        const loanData = req.body;
-        const cpf = loanData?.cpf;
-        const codigo_exemplar = loanData?.codigo_exemplar;
+      const { cpf, codigo_exemplar } = dto;
 
-        loanRules.validate(
-            { cpf, isRequiredField: true },
-            { codigo_exemplar, isRequiredField: true }
-        );
+      this.loanRules.validate(
+        { cpf, isRequiredField: true },
+        { codigo_exemplar, isRequiredField: true }
+      );
 
-        const newLoan = loanService.createLoan(loanData);
-        res.status(201).json(
-            {
-                mensagem: "Empréstimo cadastrado com sucesso!",
-                loan: newLoan
-            }
-        );
+      const newLoan = this.loanService.createLoan(dto);
+      return success(201, new BasicResponseDto("Empréstimo cadastrado com sucesso!", newLoan));
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return fail(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
 
-export function listLoans(req: Request, res: Response) {
+  @Get()
+  public async listLoans(): Promise<BasicResponseDto> {
     try {
-        const loans = loanService.listLoans();
-        res.status(201).json(
-            {
-                mensagem: "Lista de empréstimos encontrada!",
-                loans
-            }
-        );
+      const loans = this.loanService.listLoans();
+      return new BasicResponseDto("Lista de empréstimos encontrada!", loans);
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      throw new Error(error.message);
     }
-};
+  }
 
-export function updateReturnDateById(req: Request, res: Response) {
+  @Put("{id}/devolucao")
+  public async updateReturnDateById(
+    @Path() id: string,
+    @Res() fail: TsoaResponse<400, BasicResponseDto>,
+    @Res() success: TsoaResponse<200, BasicResponseDto>
+  ): Promise<void> {
     try {
-        const id = req.params.id;
+      this.loanRules.validate({ id, isRequiredField: true });
 
-        loanRules.validate(
-            { id, isRequiredField: true }
-        );
-
-        const updatedLoan = loanService.updateReturnDateById(id);
-
-        res.status(201).json(
-            {
-                mensagem: "Empréstimo atualizado!",
-                updatedLoan
-            }
-        );
+      const updatedLoan = this.loanService.updateReturnDateById(id);
+      return success(200, new BasicResponseDto("Empréstimo atualizado!", updatedLoan));
     } catch (error: any) {
-        res.status(400).json({ message: error.message });
+      return fail(400, new BasicResponseDto(error.message, error));
     }
-};
+  }
+}

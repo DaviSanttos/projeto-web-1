@@ -1,10 +1,10 @@
-import { Router } from 'express';
-import { createLoan, listLoans, updateReturnDateById } from '../controllers/LoanController';
+// import { Router } from 'express';
+// import { createLoan, listLoans, updateReturnDateById } from '../controllers/LoanController';
 
-const loanRoutes = Router();
+// const loanRoutes = Router();
 
-loanRoutes.post('/', createLoan);
-loanRoutes.get('/', listLoans);
-loanRoutes.put('/:id/devolucao', updateReturnDateById);
+// loanRoutes.post('/', createLoan);
+// loanRoutes.get('/', listLoans);
+// loanRoutes.put('/:id/devolucao', updateReturnDateById);
 
-export default loanRoutes;
+// export default loanRoutes;

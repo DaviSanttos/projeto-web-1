@@ -177,7 +177,7 @@
 						"type": "string"
 					},
 					"categoria": {
-						"type": "string"
+						"$ref": "#/components/schemas/BookCategoryEnum"
 					}
 				},
 				"type": "object",

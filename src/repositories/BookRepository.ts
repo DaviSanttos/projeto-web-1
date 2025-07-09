@@ -81,29 +81,31 @@ export class BookRepository {
     return this.findById(id);
   }
 
-  deleteBookById(id: number): Book {
-    const index = this.booklist.findIndex((u: Book) => u.id === id);
-
-    const deletedUser = this.booklist[index];
-    this.booklist.splice(index, 1);
-
-    return deletedUser;
+  async deleteBookById(id: number): Promise<void> {
+    const query = `DELETE FROM Livro WHERE id = ?`;
+    await executarComandoSQLAsync(query, [id]);
   }
 
-  existsByIsbn(isbn: string): boolean {
-    return this.booklist.some((book: Book) => book.isbn === isbn);
+  async existsByIsbn(isbn: string): Promise<boolean> {
+    const query = `SELECT COUNT(*) as count FROM Livro WHERE isbn = ?`;
+    const result = await executarComandoSQLAsync(query, [isbn]);
+    return result[0].count > 0;
   }
 
-  findBookByEditionPublisherAuthor(params: { edicao: string, editora: string, autor: string }): Book | undefined {
-    return this.booklist.find((book: Book) => {
-      return book.edicao === params.edicao &&
-        book.editora === params.editora &&
-        book.autor === params.autor
-    });
+  async findBookByEditionPublisherAuthor(params: { edicao: string, editora: string, autor: string }): Promise<Book | undefined> {
+    const query = `
+      SELECT * FROM Livro WHERE edicao = ? AND editora = ? AND autor = ? LIMIT 1
+    `;
+    const results = await executarComandoSQLAsync(query, [params.edicao, params.editora, params.autor]);
+    if (results.length === 0) return undefined;
+    return results[0];
   }
 
-  findById(id: number): Book | undefined {
-    return this.booklist.find((book: Book) => book.id === id);
+  async findById(id: number): Promise<Book | undefined> {
+    const query = `SELECT * FROM Livro WHERE id = ? LIMIT 1`;
+    const results = await executarComandoSQLAsync(query, [id]);
+    if (results.length === 0) return undefined;
+    return results[0];
   }
 
   imprimeResult(err: any, result: any) {

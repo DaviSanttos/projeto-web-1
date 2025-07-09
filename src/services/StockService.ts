@@ -7,12 +7,12 @@ export class StockService {
     stockRepository = StockRepository.getInstance();
     bookService = new BookService();
 
-    createCopy(copyData: any): any {
+    async createCopy(copyData: any): Promise<any> {
         // const isbn = copyData?.ISBN;
         // const id = copyData?.codigo_exemplar;
         const { ISBN: isbn, codigo_exemplar: id } = copyData;
 
-        const livro_id = this.bookService.findBookByIsbn(isbn)?.id;
+        const livro_id = await (await this.bookService.findBookByIsbn(isbn))?.id;
         if (!livro_id) throw new Error("Livro não encontrado com esse ISBN");
 
         const exists = this.stockRepository.existsById(parseInt(id));

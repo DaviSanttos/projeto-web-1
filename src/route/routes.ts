@@ -109,7 +109,7 @@ const models: TsoaRoute.Models = {
             "autor": {"dataType":"string"},
             "editora": {"dataType":"string"},
             "edicao": {"dataType":"string"},
-            "categoria": {"dataType":"string"},
+            "categoria": {"ref":"BookCategoryEnum"},
         },
         "additionalProperties": false,
     },

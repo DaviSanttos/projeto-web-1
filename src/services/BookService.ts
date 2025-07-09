@@ -11,11 +11,11 @@ export class BookService {
     async createBook(bookData: any): Promise<Book> {
         const { titulo, autor, editora, edicao, ISBN: isbn, categoria } = bookData;
 
-        const exists = this.bookRepository.existsByIsbn(isbn);
+        const exists = await this.bookRepository.existsByIsbn(isbn);
 
         if (exists) throw new Error(`Livro já cadastrado com esse ISBN`);
 
-        const book = this.bookRepository.findBookByEditionPublisherAuthor({
+        const book = await this.bookRepository.findBookByEditionPublisherAuthor({
             edicao: edicao,
             editora: editora,
             autor: autor
@@ -74,29 +74,27 @@ export class BookService {
         return newBook;
     }
 
-    // deleteBookByIsbn(isbn: string): Book {
-    //     const book = this.bookRepository.getByIsbn(isbn);
-    //     if (!book) throw new Error("Livro nao encontrado");
+    async deleteBookByIsbn(isbn: string) {
+        const book = await this.bookRepository.getByIsbn(isbn);
+        if (!book) throw new Error("Livro nao encontrado");
 
-    //     const stockService = new StockService();
+        const stockService = new StockService();
 
-    //     const copies = stockService.findCopiesByBookId(book.id);
+        const copies = stockService.findCopiesByBookId(book.id);
 
-    //     const loanService = new LoanService();
+        const loanService = new LoanService();
 
-    //     const loans = loanService.findLoansByCopyIds(copies.map(copy => copy.id));
+        const loans = loanService.findLoansByCopyIds(copies.map(copy => copy.id));
 
-    //     if (loans.length > 0) {
-    //         throw new Error("Livro não pode ser deletado, pois existem exemplares emprestados");
-    //     }
+        if (loans.length > 0) {
+            throw new Error("Livro não pode ser deletado, pois existem exemplares emprestados");
+        }
 
-    //     const deletedBook = this.bookRepository.deleteBookById(book.id);
+        await this.bookRepository.deleteBookById(book.id);
+    }
 
-    //     return deletedBook;
-    // }
-
-    getRelacionCourseToBookCategory(couserId: number, bookId: number): boolean {
-        const book = this.bookRepository.findById(bookId);
+    async getRelacionCourseToBookCategory(couserId: number, bookId: number): Promise<boolean> {
+        const book = await this.bookRepository.findById(bookId);
 
         if (!book) throw new Error("Livro não encontrado");
 

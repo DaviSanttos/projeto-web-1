@@ -2,6 +2,7 @@ import express from 'express';
 import { setupSwagger } from './config/swagger';
 import { RegisterRoutes } from './route/routes';
 import { ValidateError } from 'tsoa';
+import { BookRepository } from './repositories/BookRepository';
 
 const app = express();
 const PORT = 3090;
@@ -14,9 +15,14 @@ app.use('/', apiRouter);
 
 setupSwagger(app);
 
+
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
+
+const bookRepository = BookRepository.getInstance();
+
+bookRepository.createBookTable();
 
 app.use((err: any, req: any, res: any, next: any) => {
   if (err instanceof ValidateError) {

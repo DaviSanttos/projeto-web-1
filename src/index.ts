@@ -3,6 +3,20 @@ import { setupSwagger } from './config/swagger';
 import { RegisterRoutes } from './route/routes';
 import { ValidateError } from 'tsoa';
 import { BookRepository } from './repositories/BookRepository';
+import { UserRepository } from './repositories/UserRepository';
+import { LoanRepository } from './repositories/LoanRepository';
+import { StockRepository } from './repositories/StockRepository';
+import { UserCategoryRepository } from './repositories/UserCategoryRepository';
+import { BookCategoryRepository } from './repositories/BookCategoryRepository';
+import { CourseRepository } from './repositories/CourseRepository';
+
+const bookRepository = BookRepository.getInstance();
+const userRepository = UserRepository.getInstance();
+const loanRepository = LoanRepository.getInstance();
+const stockRepository = StockRepository.getInstance();
+const userCategoryRepository = UserCategoryRepository.getInstance();
+const bookCategoryRepository = BookCategoryRepository.getInstance();
+const courseRepository = CourseRepository.getInstance();
 
 const app = express();
 const PORT = 3090;
@@ -20,10 +34,6 @@ app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
 
-const bookRepository = BookRepository.getInstance();
-
-bookRepository.createBookTable();
-
 app.use((err: any, req: any, res: any, next: any) => {
   if (err instanceof ValidateError) {
     console.error("Validation Failed: ", err.fields);
@@ -35,3 +45,28 @@ app.use((err: any, req: any, res: any, next: any) => {
 
   next(err);
 });
+
+async function initializeDatabase() {
+  try {
+    await userCategoryRepository.createUserCategoryTable();
+    await userCategoryRepository.insertDefaultCategories();
+
+    await bookCategoryRepository.createBookCategoryTable();
+    await bookCategoryRepository.insertDefaultBookCategories();
+
+    await courseRepository.createCourseTable();
+    await courseRepository.insertDefaultCourses();
+
+    await userRepository.createUserTable();
+    await bookRepository.createBookTable();
+    await stockRepository.createStockTable();
+    await loanRepository.createLoanTable();
+
+    console.log('Todas as tabelas criadas e dados iniciais inseridos!');
+  } catch (error) {
+    console.error('Erro na inicialização do banco de dados:', error);
+    process.exit(1);
+  }
+}
+
+initializeDatabase();

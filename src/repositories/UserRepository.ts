@@ -109,8 +109,8 @@ export class UserRepository {
   async createUserTable() {
     try {
       const query = `
-      CREATE TABLE IF NOT EXISTS User (
-        id BIGINT PRIMARY KEY,
+      CREATE TABLE IF NOT EXISTS Usuario (
+        id INT PRIMARY KEY,
         nome VARCHAR(255) NOT NULL,
         cpf VARCHAR(14) NOT NULL UNIQUE,
         ativo ENUM('ativo', 'inativo', 'suspenso') DEFAULT 'ativo',

@@ -25,7 +25,7 @@ app.use(express.json());
 
 const apiRouter = express.Router();
 RegisterRoutes(apiRouter);
-app.use('/', apiRouter);
+app.use('/library', apiRouter);
 
 setupSwagger(app);
 

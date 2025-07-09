@@ -5,7 +5,7 @@
   "spec": {
     "outputDirectory": "src",
     "specVersion": 3,
-    "basePath": "/",
+    "basePath": "/library",
     "outputFile": "swagger.json"
   },
   "routes": {

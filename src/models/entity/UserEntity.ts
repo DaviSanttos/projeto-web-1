@@ -17,8 +17,8 @@ export class User {
     curso_id: number;
 
     constructor(
-        nome: string, 
-        cpf: string, 
+        nome: string,
+        cpf: string,
         categoria_id: number,
         curso_id: number
     ) {
@@ -27,6 +27,6 @@ export class User {
         this.ativo = userActive.ATIVO;
         this.categoria_id = categoria_id;
         this.curso_id = curso_id;
-        this.id = IdGenerator.generate();
+        this.id = 0;
     }
 }

@@ -6,6 +6,6 @@ export class UpdateUserDto {
   nome?: string;
   categoria?: UserCategoryName;
   curso?: CourseName;
-  status?: userActive;
+  ativo?: userActive;
 }
 

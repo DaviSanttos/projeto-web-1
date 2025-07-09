@@ -1,57 +1,9 @@
-import { executarComandoSQL } from "../database/mysql";
+import { executarComandoSQL, executarComandoSQLAsync } from "../database/mysql";
 import { User, userActive } from "../models/entity/UserEntity";
 
 export class UserRepository {
   private static instance: UserRepository;
   private userList: User[] = [];
-  // [
-  //     {
-  //         "ativo": userActive.ATIVO,
-  //         "nome": "davi",
-  //         "cpf": "12345678909",
-  //         "categoria_id": 1,
-  //         "curso_id": 1,
-  //         "email": "3",
-  //         "id": 1749302865474
-  //     },
-  //     {
-  //         "ativo": userActive.SUSPENSO,
-  //         "nome": "fe",
-  //         "cpf": "12345678909",
-  //         "categoria_id": 1,
-  //         "curso_id": 1,
-  //         "email": "3",
-  //         "id": 1749302876384
-  //     },
-  //     {
-  //         "ativo": userActive.INATIVO,
-  //         "nome": "ads",
-  //         "cpf": "12345678909",
-  //         "categoria_id": 2,
-  //         "curso_id": 1,
-  //         "email": "3",
-  //         "id": 1749302877183
-  //     },
-  //     {
-  //         "ativo": "ativo",
-  //         "nome": "ads",
-  //         "cpf": "12345678909",
-  //         "categoria_id": 1,
-  //         "curso_id": 1,
-  //         "email": "3",
-  //         "id": 1749302877973
-  //     },
-  //     {
-  //         "ativo": "ativo",
-  //         "nome": "ads",
-  //         "cpf": "12345678909",
-  //         "categoria_id": 1,
-  //         "curso_id": 1,
-  //         "email": "3",
-  //         "id": 1749302878800
-  //     }
-  // ];
-
   private constructor() { }
 
   public static getInstance(): UserRepository {
@@ -61,40 +13,64 @@ export class UserRepository {
     return this.instance;
   }
 
-  create(user: User) {
-    this.userList.push(user);
+  async create(user: User): Promise<void> {
+    const query = `
+      INSERT INTO Usuario (id, nome, cpf, ativo, categoria_id, curso_id)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    const valores = [user.id, user.nome, user.cpf, user.ativo, user.categoria_id, user.curso_id];
+    await executarComandoSQLAsync(query, valores);
   }
 
-  list() {
-    return this.userList;
+  async list(): Promise<User[]> {
+    const query = `SELECT * FROM Usuario`;
+    const result = await executarComandoSQLAsync(query, []);
+    return result as User[];
   }
 
-  findByCpf(cpf: string): User | undefined {
-    return this.userList.find((user: User) => user.cpf === cpf);
+
+  async findByCpf(cpf: string): Promise<User | undefined> {
+    const query = `SELECT * FROM Usuario WHERE cpf = ? LIMIT 1`;
+    const result = await executarComandoSQLAsync(query, [cpf]);
+    return (result as User[])[0];
   }
 
-  updateById(id: number, updates: any): User {
-    const index = this.userList.findIndex((u: User) => u.id === id);
+  async updateById(id: number, updates: Partial<User>): Promise<User> {
+    const fields = [];
+    const values = [];
 
-    this.userList[index] = {
-      ...this.userList[index],
-      ...updates
-    };
+    for (const [key, value] of Object.entries(updates)) {
+      fields.push(`${key} = ?`);
+      values.push(value);
+    }
 
-    return this.userList[index];
+    const query = `UPDATE Usuario SET ${fields.join(", ")} WHERE id = ?`;
+    values.push(id);
+
+    await executarComandoSQLAsync(query, values);
+    const user = await this.findById(id);
+    return user!;
   }
 
-  deleteUserById(id: number): User {
-    const index = this.userList.findIndex((u: User) => u.id === id);
+ async deleteUserById(id: number): Promise<User> {
+    const user = await this.findById(id);
+    if (!user) throw new Error("Usuário não encontrado");
 
-    const deletedUser = this.userList[index];
-    this.userList.splice(index, 1);
-
-    return deletedUser;
+    const query = `DELETE FROM Usuario WHERE id = ?`;
+    await executarComandoSQLAsync(query, [id]);
+    return user;
   }
 
-  existsByCpf(cpf: string): boolean {
-    return this.userList.some((user: User) => user.cpf === cpf);
+  async existsByCpf(cpf: string): Promise<boolean> {
+    const query = `SELECT COUNT(*) as total FROM Usuario WHERE cpf = ?`;
+    const result = await executarComandoSQLAsync(query, [cpf]);
+    return result[0].total > 0;
+  }
+
+  async findById(id: number): Promise<User | undefined> {
+    const query = `SELECT * FROM Usuario WHERE id = ? LIMIT 1`;
+    const result = await executarComandoSQLAsync(query, [id]);
+    return (result as User[])[0];
   }
 
   imprimeResult(err: any, result: any) {
@@ -110,7 +86,7 @@ export class UserRepository {
     try {
       const query = `
       CREATE TABLE IF NOT EXISTS Usuario (
-        id INT PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         nome VARCHAR(255) NOT NULL,
         cpf VARCHAR(14) NOT NULL UNIQUE,
         ativo ENUM('ativo', 'inativo', 'suspenso') DEFAULT 'ativo',

@@ -13,17 +13,11 @@ export class LoanService {
     stockService = new StockService();
     bookService = new BookService();
 
-    createLoan(loanData: any): Loan {
-        // const cpf = loanData?.cpf;
-        // const codigo_exemplar = loanData?.codigo_exemplar;
-
-        // if (!cpf || !codigo_exemplar) {
-        //     throw new Error("Informacoes incompletas");
-        // }
+    async createLoan(loanData: any): Promise<Loan> {
 
         const { cpf, codigo_exemplar} = loanData
 
-        const user = this.userService.findUserByCpf(cpf);
+        const user = await this.userService.findUserByCpf(cpf);
         if (!user) throw new Error("Usuário não encontrado");
 
         if (user.ativo != userActive.ATIVO) throw new Error("Somente usuários ativos podem realizar empréstimos");
@@ -37,7 +31,7 @@ export class LoanService {
 
         this.stockService.setAvailabilityFalseAndIncrementQuantity(codigo_exemplar);
 
-        const data_entrega = this.getDeliveryDate(user, copy.livro_id);
+        const data_entrega = await this.getDeliveryDate(user, copy.livro_id);
 
         const newLoan = new Loan(
             user.id,
@@ -81,11 +75,11 @@ export class LoanService {
     }
 
 
-    private getDeliveryDate(user: User, bookId: number): Date | undefined {
+    private async getDeliveryDate(user: User, bookId: number): Promise<Date | undefined> {
         if (user.categoria_id === 2) return Time.addDays(Time.nowInBrazil(), 30);
 
         if (user.categoria_id === 1) {
-            const hasRelacion = this.bookService.getRelacionCourseToBookCategory(user.curso_id, bookId);
+            const hasRelacion = await this.bookService.getRelacionCourseToBookCategory(user.curso_id, bookId);
 
             if (hasRelacion) {
                 return Time.addDays(Time.nowInBrazil(), 30);

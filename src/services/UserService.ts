@@ -11,7 +11,7 @@ export class UserService {
     courseService = CourseService;
     userCategoryService = UserCategoryService;
 
-    createUser(userData: any): User {
+    async createUser(userData: any): Promise<User> {
         const nome = userData?.nome;
         const cpf = userData?.cpf;
         const categoria = userData?.categoria;
@@ -24,7 +24,7 @@ export class UserService {
 
         validateCPF(cpf);
 
-        const exists = this.userRepository.existsByCpf(cpf);
+        const exists = await this.userRepository.existsByCpf(cpf);
         if (exists) throw new Error("Usuário já cadastrado com esse CPF");
 
         const curso_id = this.courseService.findCourseIdByname(curso);
@@ -40,12 +40,12 @@ export class UserService {
         return newUser;
     }
 
-    listUsers(params: any): User[] {
-        const userList = this.userRepository.list();
+    async listUsers(params: any): Promise<User[]> {
+        const userList = await this.userRepository.list();
 
         let curso_id: number;
         let categoria_id: number;
-        
+
         if (params.curso) curso_id = this.courseService.findCourseIdByname(params?.curso);
         if (params.categoria) categoria_id = this.userCategoryService.findUserCategoryIdByname(params?.categoria);
 
@@ -60,10 +60,10 @@ export class UserService {
         });
     }
 
-    findUserByCpf(cpf: string): User {
+    async findUserByCpf(cpf: string): Promise<User | undefined> {
         validateCPF(cpf);
 
-        const user = this.userRepository.findByCpf(cpf);
+        const user = await this.userRepository.findByCpf(cpf);
 
         if (!user) {
             throw new Error("Usuário não encontrado");
@@ -71,21 +71,17 @@ export class UserService {
         return user;
     }
 
-    updateUserByCpf(cpf: string, body: any): User {
+    async updateUserByCpf(cpf: string, body: any): Promise<User> {
         validateCPF(cpf);
 
-        // if (!userActiveValues.includes(body.ativo)) {
-        //     throw new Error("Status inválido. Valores válidos: " + userActiveValues.join(", "));
-        // }
-
-        const user = this.userRepository.findByCpf(cpf);
+        const user = await this.userRepository.findByCpf(cpf);
 
         if (!user) {
             throw new Error("Usuário não encontrado");
         }
 
-        const categoria_id = this.userCategoryService.findUserCategoryIdByname(body.categoria);
-        const curso_id = this.courseService.findCourseIdByname(body.curso);
+        const categoria_id = await this.userCategoryService.findUserCategoryIdByname(body.categoria);
+        const curso_id = await this.courseService.findCourseIdByname(body.curso);
 
         const userUpdate: Partial<User> = {
             nome: body.nome,
@@ -95,30 +91,30 @@ export class UserService {
         }
 
 
-        const newUser = this.userRepository.updateById(user.id, userUpdate);
+        const newUser = await this.userRepository.updateById(user.id, userUpdate);
         return newUser;
     }
 
-    deleteUserByCpf(cpf: string): User {
+    async deleteUserByCpf(cpf: string): Promise<User> {
         validateCPF(cpf);
 
         const loanService = new LoanService();
-        const user = this.userRepository.findByCpf(cpf);
+        const user = await this.userRepository.findByCpf(cpf);
 
         if (!user) {
             throw new Error("Usuário não encontrado");
         }
 
-        const loans = loanService.findLoansByUserId(user.id);
+        const loans = await loanService.findLoansByUserId(user.id);
 
         if (loans.length > 0) {
             throw new Error("Usuário não pode ser excluído, pois possui empréstimos pendentes.");
         }
 
-        return this.userRepository.deleteUserById(user.id);
+        return await this.userRepository.deleteUserById(user.id);
     }
 
-    findById(id: number): User | undefined {
-        return this.userRepository.list().find(user => user.id === id);
+    async findById(id: number): Promise<User | undefined> {
+        return await this.userRepository.findById(id);
     }
 }

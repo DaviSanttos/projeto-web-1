@@ -61,7 +61,7 @@ const models: TsoaRoute.Models = {
             "nome": {"dataType":"string"},
             "categoria": {"ref":"UserCategoryName"},
             "curso": {"ref":"CourseName"},
-            "status": {"ref":"userActive"},
+            "ativo": {"ref":"userActive"},
         },
         "additionalProperties": false,
     },

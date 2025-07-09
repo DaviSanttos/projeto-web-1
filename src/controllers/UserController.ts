@@ -43,7 +43,7 @@ export class UserController extends Controller {
         { curso, isRequiredField: true }
       );
 
-      const newUser = this.userService.createUser(dto);
+      const newUser = await this.userService.createUser(dto);
       return success(201, new BasicResponseDto("Usuário cadastrado com sucesso!", newUser));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -61,7 +61,7 @@ export class UserController extends Controller {
     @Query() status?: userActive,
   ): Promise<BasicResponseDto | void> {
     try {
-      const users = this.userService.listUsers({ nome, cpf, categoria, curso, status });
+      const users = await this.userService.listUsers({ nome, cpf, categoria, curso, status });
       return success(200, new BasicResponseDto("Lista de usuários encontrada!", users));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -75,7 +75,7 @@ export class UserController extends Controller {
     @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto | void> {
     try {
-      const user = this.userService.findUserByCpf(cpf);
+      const user = await this.userService.findUserByCpf(cpf);
       return success(200, new BasicResponseDto("Usuário encontrado!", user));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -90,16 +90,16 @@ export class UserController extends Controller {
     @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto | void> {
     try {
-      const { nome, categoria, curso, status } = updateData;
+      const { nome, categoria, curso, ativo } = updateData;
 
       this.userRules.validate(
         { nome, isRequiredField: false },
         { categoria, isRequiredField: false },
         { curso, isRequiredField: false },
-        { status, isRequiredField: false }
+        { ativo, isRequiredField: false }
       );
 
-      const updatedUser = this.userService.updateUserByCpf(cpf, updateData);
+      const updatedUser = await this.userService.updateUserByCpf(cpf, updateData);
       return success(200, new BasicResponseDto("Usuário atualizado!", updatedUser));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -113,7 +113,7 @@ export class UserController extends Controller {
     @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto | void> {
     try {
-      const deletedUser = this.userService.deleteUserByCpf(cpf);
+      const deletedUser = await this.userService.deleteUserByCpf(cpf);
       return success(200, new BasicResponseDto("Usuário deletado!", deletedUser));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));

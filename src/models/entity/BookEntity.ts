@@ -21,10 +21,6 @@ export class Book {
         this.edicao = edicao;
         this.isbn = isbn;
         this.categoria_id = categoria_id;
-        this.id = this.generateId();
-    }
-
-    private generateId(): number {
-        return Date.now();
+        this.id = 0;
     }
 }

@@ -80,7 +80,7 @@
 					"curso": {
 						"$ref": "#/components/schemas/CourseName"
 					},
-					"status": {
+					"ativo": {
 						"$ref": "#/components/schemas/userActive"
 					}
 				},

@@ -9,6 +9,8 @@ import { StockRepository } from './repositories/StockRepository';
 import { UserCategoryRepository } from './repositories/UserCategoryRepository';
 import { BookCategoryRepository } from './repositories/BookCategoryRepository';
 import { CourseRepository } from './repositories/CourseRepository';
+import { routineLoanSuspension } from './routines/routineLoanSuspension';
+import { routineUserReactivationRoutine } from './routines/routineUserReactivation';
 
 const bookRepository = BookRepository.getInstance();
 const userRepository = UserRepository.getInstance();
@@ -17,6 +19,9 @@ const stockRepository = StockRepository.getInstance();
 const userCategoryRepository = UserCategoryRepository.getInstance();
 const bookCategoryRepository = BookCategoryRepository.getInstance();
 const courseRepository = CourseRepository.getInstance();
+
+new routineLoanSuspension().start();
+new routineUserReactivationRoutine().start();
 
 const app = express();
 const PORT = 3090;
@@ -29,6 +34,7 @@ app.use('/library', apiRouter);
 
 setupSwagger(app);
 
+initializeDatabase();
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
@@ -69,4 +75,4 @@ async function initializeDatabase() {
   }
 }
 
-initializeDatabase();
+

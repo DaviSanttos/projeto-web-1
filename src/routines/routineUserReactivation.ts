@@ -13,39 +13,42 @@ export class routineUserReactivationRoutine {
     start() {
         console.log("Rotina de reativação de usuários iniciada...");
 
-        setInterval(() => {
-            const today = Time.nowInBrazil();
+        setInterval(async () => {
+            try {
+                const today = Time.nowInBrazil();
 
-            const usersToCheck = this.userRepository.list().filter(user =>
-                user.ativo === userActive.SUSPENSO || user.ativo === userActive.INATIVO
-            );
-
-            usersToCheck.forEach(user => {
-                const userLoans = this.loanService.listLoans().filter(
-                    loan => loan.usuario_id === user.id
+                const allUsers = await this.userRepository.list();
+                const usersToCheck = allUsers.filter(user =>
+                    user.ativo === userActive.SUSPENSO || user.ativo === userActive.INATIVO
                 );
 
-                // Se não houver empréstimos, pula
-                if (userLoans.length === 0) return;
-
-                // Todos os empréstimos foram entregues?
-                const allReturned = userLoans.every(loan => !!loan.data_devolucao);
-
-                if(!allReturned) return;
-
-                // Todos possuem suspensão expirada (ou nenhuma suspensão)?
-                const allSuspensionsExpired = userLoans.every(loan => {
-                    if (!loan.suspensao_ate) return true;
-                    const suspensaoAte = Time.toBrazilTime(loan.suspensao_ate);
-                    return suspensaoAte <= today;
-                });
-
-                if (allReturned && allSuspensionsExpired) {
-                    user.ativo = userActive.ATIVO;
-                    this.userRepository.updateById(user.id, user);
-                    console.log(chalk.green(`Usuário ${user.id} reativado.`));
+                if (usersToCheck.length === 0) {
+                    console.log(chalk.yellow("Nenhum usuário suspenso ou inativo encontrado."));
+                    return;
                 }
-            });
+
+                for (const user of usersToCheck) {
+                    const userLoans = await this.loanService.findLoansByUserId(user.id);
+
+                    if (userLoans.length === 0) continue;
+
+                    const allReturned = userLoans.every(loan => !!loan.data_devolucao);
+                    if (!allReturned) continue;
+
+                    const allSuspensionsExpired = userLoans.every(loan => {
+                        if (!loan.suspensao_ate) return true;
+                        const suspensaoAte = Time.toBrazilTime(loan.suspensao_ate);
+                        return suspensaoAte <= today;
+                    });
+
+                    if (allSuspensionsExpired) {
+                        await this.userRepository.updateById(user.id, { ativo: userActive.ATIVO });
+                        console.log(chalk.green(`Usuário ${user.id} reativado.`));
+                    }
+                }
+            } catch (err) {
+                console.error(chalk.red("Erro na rotina de reativação de usuários:"), err);
+            }
         }, 15000);
     }
 }

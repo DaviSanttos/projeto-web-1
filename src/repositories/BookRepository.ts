@@ -5,7 +5,6 @@ import BookCategoryService from "../services/BookCategoryService";
 
 export class BookRepository {
   private static instance: BookRepository;
-  private booklist: Book[] = [];
 
   public static getInstance(): BookRepository {
     if (!this.instance) {

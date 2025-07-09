@@ -3,7 +3,6 @@ import { User, userActive } from "../models/entity/UserEntity";
 
 export class UserRepository {
   private static instance: UserRepository;
-  private userList: User[] = [];
   private constructor() { }
 
   public static getInstance(): UserRepository {

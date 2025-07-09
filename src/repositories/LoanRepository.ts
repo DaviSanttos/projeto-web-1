@@ -4,7 +4,6 @@ import { Loan } from "../models/entity/LoanEntity";
 
 export class LoanRepository {
   private static instance: LoanRepository;
-  private loanlist: Loan[] = [];
 
   private constructor() { }
 

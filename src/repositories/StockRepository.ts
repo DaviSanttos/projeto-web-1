@@ -5,7 +5,6 @@ import { Stock } from "../models/entity/StockEntity";
 
 export class StockRepository {
   private static instance: StockRepository;
-  private stocklist: Stock[] = [];
 
   private constructor() { }
 

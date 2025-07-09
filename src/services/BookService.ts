@@ -80,11 +80,11 @@ export class BookService {
 
         const stockService = new StockService();
 
-        const copies = stockService.findCopiesByBookId(book.id);
+        const copies = await stockService.findCopiesByBookId(book.id);
 
         const loanService = new LoanService();
 
-        const loans = loanService.findLoansByCopyIds(copies.map(copy => copy.id));
+        const loans = await loanService.findLoansByCopyIds(copies.map(copy => copy.id));
 
         if (loans.length > 0) {
             throw new Error("Livro não pode ser deletado, pois existem exemplares emprestados");

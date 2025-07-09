@@ -4,73 +4,71 @@ import { StockRepository } from "../repositories/StockRepository";
 import { BookService } from "./BookService";
 
 export class StockService {
-    stockRepository = StockRepository.getInstance();
-    bookService = new BookService();
+  stockRepository = StockRepository.getInstance();
+  bookService = new BookService();
 
-    async createCopy(copyData: any): Promise<any> {
-        // const isbn = copyData?.ISBN;
-        // const id = copyData?.codigo_exemplar;
-        const { ISBN: isbn, codigo_exemplar: id } = copyData;
+  async createCopy(copyData: any): Promise<any> {
+    const {isbn, codigo_exemplar: id } = copyData;
 
-        const livro_id = await (await this.bookService.findBookByIsbn(isbn))?.id;
-        if (!livro_id) throw new Error("Livro não encontrado com esse ISBN");
+    const livro = await this.bookService.findBookByIsbn(isbn);
+    if (!livro) throw new Error("Livro não encontrado com esse ISBN");
 
-        const exists = this.stockRepository.existsById(parseInt(id));
-        if (exists) throw new Error("Exemplar já cadastrado Com esse código");
+    const exists = await this.stockRepository.existsById(Number(id));
+    if (exists) throw new Error("Exemplar já cadastrado Com esse código");
 
-        if (!livro_id || !id) {
-            throw new Error("Informacoes incompletas");
-        }
+    const livro_id = livro.id;
 
-        const newCopy = new Stock(
-            livro_id,
-            parseInt(id),
-        );
-        this.stockRepository.create(newCopy);
-        return newCopy;
+    if (!livro_id || !id) {
+      throw new Error(`Informacoes incompletas ${livro_id} ${id}`);
     }
 
-    listCopies(): Stock[] {
-        return this.stockRepository.list().filter((copy) => copy.disponivel === true);
-    }
+    const newCopy = new Stock(
+      livro_id,
+      parseInt(id),
+    );
+    this.stockRepository.create(newCopy);
+    return newCopy;
+  }
 
-    findCopyById(codigo: string): Stock {
-        const copyId = parseInt(codigo);
+  async listCopies(): Promise<Stock[]> {
+    const copies = await this.stockRepository.list();
+    return copies.filter(copy => copy.disponivel);
+  }
 
-        const copy = this.stockRepository.findById(copyId);
-        if (!copy) throw new Error("Exemplar não encontrado");
-    
-        return copy;
-    }
+  async findCopyById(codigo: string): Promise<Stock> {
+    const copyId = parseInt(codigo);
 
-    updateAvailability(codigo: number, availaBility: boolean): Stock {
-        const copyId = codigo;
+    const copy = await this.stockRepository.findById(copyId);
+    if (!copy) throw new Error("Exemplar não encontrado");
 
-        const copy = this.stockRepository.findById(copyId);
-        if (!copy) throw new Error("Exemplar não encontrado");
+    return copy;
+  }
 
-        const updatedCopy = this.stockRepository.updateAvalabilityById(copyId, availaBility);
-        return updatedCopy;
-    }
+  async updateAvailability(codigo: number, availaBility: boolean): Promise<Stock> {
+    const copyId = codigo;
 
-    deleteCopyById(codigo: string): Stock {
-        const copyId = parseInt(codigo);
+    const copy = await this.stockRepository.findById(copyId);
+    if (!copy) throw new Error("Exemplar não encontrado");
 
-        const copy = this.stockRepository.findById(copyId);
-        if (!copy) throw new Error("Exemplar não encontrado");
+    const updatedCopy = await this.stockRepository.updateAvalabilityById(copyId, availaBility);
+    return updatedCopy;
+  }
 
-        if (!copy.disponivel) throw new Error("Exemplar não pode ser deletado, pois está emprestado");
-        return this.stockRepository.deleteById(copyId);
-    }
+  async deleteCopyById(codigo: string): Promise<Stock> {
+    const copyId = parseInt(codigo);
 
-    setAvailabilityFalseAndIncrementQuantity(codigo: string): Stock {
-        const copyId = parseInt(codigo);
+    const copy = await this.stockRepository.findById(copyId);
+    if (!copy) throw new Error("Exemplar não encontrado");
 
-        const updatedCopy = this.stockRepository.setAvalabilityFalseAndIncrementById(copyId);
-        return updatedCopy;
-    }
+    if (!copy.disponivel) throw new Error("Exemplar não pode ser deletado, pois está emprestado");
+    return await this.stockRepository.deleteById(copyId);
+  }
 
-    findCopiesByBookId(livro_id: number): Stock[] {
-        return this.stockRepository.list().filter((copy) => copy.livro_id === livro_id);
-    }
+  async setAvailabilityFalseAndIncrementQuantity(codigo: string): Promise<Stock> {
+    return await this.stockRepository.setAvalabilityFalseAndIncrementById(Number(codigo));
+  }
+
+  async findCopiesByBookId(livro_id: number): Promise<Stock[]> {
+    return await this.stockRepository.findCopiesByBookId(livro_id);
+  }
 }

@@ -36,7 +36,7 @@ export class LoanController extends Controller {
         { codigo_exemplar, isRequiredField: true }
       );
 
-      const newLoan = this.loanService.createLoan(dto);
+      const newLoan = await this.loanService.createLoan(dto);
       return success(201, new BasicResponseDto("Empréstimo cadastrado com sucesso!", newLoan));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -49,7 +49,7 @@ export class LoanController extends Controller {
     @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto> {
     try {
-      const loans = this.loanService.listLoans();
+      const loans = await this.loanService.listLoans();
       return success(200, new BasicResponseDto("Lista de empréstimos encontrada!", loans));
     } catch (error: any) {
       return badRequest(404, new BasicResponseDto(error.message, error));
@@ -67,7 +67,7 @@ export class LoanController extends Controller {
         { id, isRequiredField: true }
       );
 
-      const updatedLoan = this.loanService.updateReturnDateById(id);
+      const updatedLoan = await this.loanService.updateReturnDateById(id);
       return success(200, new BasicResponseDto("Empréstimo atualizado!", updatedLoan));
     } catch (error: any) {
       return badRequest(404, new BasicResponseDto(error.message, error));

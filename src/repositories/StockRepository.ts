@@ -1,4 +1,4 @@
-import { executarComandoSQL } from "../database/mysql";
+import { executarComandoSQL, executarComandoSQLAsync } from "../database/mysql";
 import { Book } from "../models/entity/BookEntity";
 import { Stock } from "../models/entity/StockEntity";
 
@@ -16,47 +16,71 @@ export class StockRepository {
     return this.instance;
   }
 
-  create(stock: Stock) {
-    this.stocklist.push(stock);
+  async create(stock: Stock): Promise<void> {
+    const query = `
+      INSERT INTO Estoque (id, livro_id, quantidade, quantidade_emprestada, disponivel)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+
+    const params = [
+      stock.id,
+      stock.livro_id,
+      stock.quantidade,
+      stock.quantidade_emprestada,
+      stock.disponivel
+    ];
+
+    await executarComandoSQLAsync(query, params);
   }
 
-  list() {
-    return this.stocklist;
+  async list(): Promise<Stock[]> {
+    const query = `SELECT * FROM Estoque`;
+    const result = await executarComandoSQLAsync(query, []);
+    return result as Stock[];
   }
 
-  existsById(id: number): boolean {
-    return this.stocklist.some(stock => stock.id === id);
+  async existsById(id: number): Promise<boolean> {
+    const query = `SELECT COUNT(*) as total FROM Estoque WHERE id = ?`;
+    const result = await executarComandoSQLAsync(query, [id]);
+    return result[0].total > 0;
   }
 
-  findById(id: number): Stock | undefined {
-    return this.stocklist.find(stock => stock.id === id);
+  async findById(id: number): Promise<Stock | undefined> {
+    const query = `SELECT * FROM Estoque WHERE id = ?`;
+    const result = await executarComandoSQLAsync(query, [id]);
+    return result[0] as Stock | undefined;
   }
 
-  updateAvalabilityById(id: number, availaBility: boolean): Stock {
-    const index = this.stocklist.findIndex((u: Stock) => u.id === id);
+  async updateAvalabilityById(id: number, available: boolean): Promise<Stock> {
+    const query = `UPDATE Estoque SET disponivel = ? WHERE id = ?`;
+    await executarComandoSQLAsync(query, [available, id]);
 
-    this.stocklist[index].disponivel = availaBility;
-
-    return this.stocklist[index];
+    const updated = await this.findById(id);
+    if (!updated) throw new Error("Exemplar não encontrado após atualização");
+    return updated;
   }
 
-  deleteById(id: number): Stock {
-    const index = this.stocklist.findIndex((u: Stock) => u.id === id);
-    const deletedCopy = this.stocklist[index];
+  async deleteById(id: number): Promise<Stock> {
+    const stock = await this.findById(id);
+    if (!stock) throw new Error("Exemplar não encontrado");
 
-    this.stocklist.splice(index, 1);
-    return deletedCopy;
+    const query = `DELETE FROM Estoque WHERE id = ?`;
+    await executarComandoSQLAsync(query, [id]);
+    return stock;
   }
 
-  setAvalabilityFalseAndIncrementById(id: number): Stock {
-    const index = this.stocklist.findIndex((u: Stock) => u.id === id);
+  async setAvalabilityFalseAndIncrementById(id: number): Promise<Stock> {
+    const query = `
+      UPDATE Estoque
+      SET disponivel = false, quantidade_emprestada = quantidade_emprestada + 1
+      WHERE id = ?
+    `;
+    await executarComandoSQLAsync(query, [id]);
 
-    this.stocklist[index].disponivel = false;
-    this.stocklist[index].quantidade_emprestada = 1;
-
-    return this.stocklist[index];
+    const updated = await this.findById(id);
+    if (!updated) throw new Error("Exemplar não encontrado após atualização");
+    return updated;
   }
-
 
   imprimeResult(err: any, result: any) {
     if (err) {
@@ -64,6 +88,12 @@ export class StockRepository {
     } else if (result !== undefined) {
       console.log('Dentro do callback:', result);
     }
+  }
+
+  async findCopiesByBookId(livro_id: number): Promise<Stock[]> {
+    const query = `SELECT * FROM Estoque WHERE livro_id = ?`;
+    const result = await executarComandoSQLAsync(query, [livro_id]);
+    return result as Stock[];
   }
 
   async createStockTable() {

@@ -20,10 +20,6 @@ export class Loan {
         this.data_emprestimo = Time.nowInBrazil();
         this.data_entrega = data_entrega ?? Time.addDays(Time.nowInBrazil(), 80);
         this.dias_atraso = 0;
-        this.id = this.generateId();
-    }
-
-    private generateId(): number {
-        return Date.now();
+        this.id = 0;
     }
 }

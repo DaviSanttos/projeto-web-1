@@ -24,7 +24,7 @@ export class LoanService {
 
         this.checkLimitByCategory(user);
 
-        const copy = this.stockService.findCopyById(codigo_exemplar);
+        const copy = await this.stockService.findCopyById(codigo_exemplar);
         if (!copy) throw new Error("Exemplar não encontrado");
 
         if (copy.disponivel === false) throw new Error("Exemplar não disponível para empréstimo");
@@ -43,29 +43,29 @@ export class LoanService {
         return newLoan;
     }
 
-    listLoans(): any[] {
-        return this.loanRepository.list();
+    async listLoans(): Promise<any[]> {
+        return await this.loanRepository.list();
     }
 
-    updateReturnDateById(id: string): Loan {
+    async updateReturnDateById(id: string): Promise<Loan> {
         const loanId = parseInt(id);
 
-        const loan = this.loanRepository.findById(loanId);
+        const loan = await this.loanRepository.findById(loanId);
         if (!loan) throw new Error("Empréstimo não encontrado");
 
-        const updatedLoan = this.loanRepository.updateReturnDateById(loanId);
+        const updatedLoan = await this.loanRepository.updateReturnDateById(loanId);
         return updatedLoan;
     }
 
-    findLoansByUserId(userId: number): Loan[] {
-        const loans = this.loanRepository.list();
+    async findLoansByUserId(userId: number): Promise<Loan[]> {
+        const loans = await this.loanRepository.list();
         const userLoans = loans.filter(loan => loan.usuario_id === userId && !loan.data_devolucao);
 
         return userLoans;
     }
 
-    private checkLimitByCategory(user: User): void {
-        const loans = this.findLoansByUserId(user.id);
+    private async checkLimitByCategory(user: User): Promise<void> {
+        const loans = await this.findLoansByUserId(user.id);
 
         if (user.categoria_id === 1 && loans.length >= 3) {
             throw new Error("Usuários da categoria Aluno podem ter no máximo 3 empréstimos ativos");
@@ -89,17 +89,17 @@ export class LoanService {
         }
     }
 
-    findLoansByCopyIds(copiesIds: number[]): Loan[] {
-        const loans = this.loanRepository.list();
+    async findLoansByCopyIds(copiesIds: number[]): Promise<Loan[]> {
+        const loans = await this.loanRepository.list();
         const filteredLoans = loans.filter(loan => copiesIds.includes(loan.estoque_id) && !loan.data_devolucao);
 
         return filteredLoans;
     }
 
-    updateLoan(loan: Loan): void {
-        const existingLoan = this.loanRepository.findById(loan.id);
+    async updateLoan(loan: Loan): Promise<void> {
+        const existingLoan = await this.loanRepository.findById(loan.id);
         if (!existingLoan) throw new Error("Empréstimo não encontrado");
         
-        this.loanRepository.updateOne(existingLoan);
+        await this.loanRepository.updateOne(existingLoan);
     }
 }

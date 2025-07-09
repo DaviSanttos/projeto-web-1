@@ -38,7 +38,7 @@ export class StockController extends Controller {
         { codigo_exemplar, isRequiredField: true }
       );
 
-      const newCopy = this.stockService.createCopy(dto);
+      const newCopy = await this.stockService.createCopy(dto);
       return success(201, new BasicResponseDto("Exemplar cadastrado com sucesso!", newCopy));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -51,7 +51,7 @@ export class StockController extends Controller {
     @Res() success: TsoaResponse<200, BasicResponseDto>,
   ): Promise<BasicResponseDto> {
     try {
-      const copies = this.stockService.listCopies();
+      const copies = await this.stockService.listCopies();
       return success(200, new BasicResponseDto("Lista de exemplares encontrada!", copies));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -65,7 +65,7 @@ export class StockController extends Controller {
     @Res() success: TsoaResponse<200, BasicResponseDto>
   ): Promise<BasicResponseDto> {
     try {
-      const copy = this.stockService.findCopyById(codigo);
+      const copy = await this.stockService.findCopyById(codigo);
       return success(200, new BasicResponseDto("Exemplar encontrado!", copy));
     } catch (error: any) {
       return badRequest(404, new BasicResponseDto(error.message, error));
@@ -85,7 +85,7 @@ export class StockController extends Controller {
         { disponivel: body?.disponivel, isRequiredField: true }
       );
 
-      const updatedCopy = this.stockService.updateAvailability(codigo, body.disponivel);
+      const updatedCopy = await this.stockService.updateAvailability(codigo, body.disponivel);
       return success(200, new BasicResponseDto("Exemplar atualizado!", updatedCopy));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -100,10 +100,10 @@ export class StockController extends Controller {
   ): Promise<BasicResponseDto> {
     try {
       this.stockRules.validate(
-        { codigo_exemplar: codigo, isRequiredField: true }
+        { codigo_exemplar: Number(codigo), isRequiredField: true }
       );
 
-      const deletedCopy = this.stockService.deleteCopyById(codigo);
+      const deletedCopy = await this.stockService.deleteCopyById(codigo);
       return success(200, new BasicResponseDto("Exemplar deletado!", deletedCopy));
     } catch (error: any) {
       return badRequest(404, new BasicResponseDto(error.message, error));

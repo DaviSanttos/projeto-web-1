@@ -1,5 +1,6 @@
-import { executarComandoSQL } from "../database/mysql";
+import { executarComandoSQL, executarComandoSQLAsync } from "../database/mysql";
 import { Book } from "../models/entity/BookEntity";
+import BookCategoryService from "../services/BookCategoryService";
 
 
 export class BookRepository {
@@ -13,29 +14,72 @@ export class BookRepository {
     return this.instance;
   }
 
-  create(book: Book) {
-    this.booklist.push(book);
+  async create(book: Book): Promise<void> {
+    const query = `
+      INSERT INTO Livro (titulo, autor, editora, edicao, isbn, categoria_id)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+    const values = [book.titulo, book.autor, book.editora, book.edicao, book.isbn, book.categoria_id];
+    await executarComandoSQL(query, values, this.imprimeResult);
   }
 
-  list() {
-    return this.booklist;
+  async list(params: any): Promise<Book[]> {
+    let query = 'SELECT * FROM Livro WHERE 1=1';
+    const values: any[] = [];
+
+    if (params.titulo) {
+      query += ' AND LOWER(titulo) LIKE ?';
+      values.push(`%${params.titulo.toLowerCase()}%`);
+    }
+    if (params.autor) {
+      query += ' AND LOWER(autor) LIKE ?';
+      values.push(`%${params.autor.toLowerCase()}%`);
+    }
+    if (params.editora) {
+      query += ' AND LOWER(editora) LIKE ?';
+      values.push(`%${params.editora.toLowerCase()}%`);
+    }
+    if (params.edicao) {
+      query += ' AND LOWER(edicao) LIKE ?';
+      values.push(`%${params.edicao.toLowerCase()}%`);
+    }
+    if (params.isbn) {
+      query += ' AND LOWER(isbn) LIKE ?';
+      values.push(`%${params.isbn.toLowerCase()}%`);
+    }
+    if (params.categoria) {
+      const categoria_id = BookCategoryService.findBookCategoryIdByname(params.categoria);
+      if (categoria_id) {
+        query += ' AND categoria_id = ?';
+        values.push(categoria_id);
+      }
+    }
+
+    const results = await executarComandoSQLAsync(query, values);
+    return results;
   }
 
-  getByIsbn(isbn: string): Book | undefined {
-    return this.booklist.find(book => book.isbn === isbn);
+  async getByIsbn(isbn: string): Promise<Book | undefined> {
+    const query = `SELECT * FROM Livro WHERE isbn = ? LIMIT 1`;
+    const results = await executarComandoSQLAsync(query, [isbn]);
+    if (results.length === 0) return undefined;
+    return results[0];
   }
 
-  updateById(id: number, updates: any): Book {
-    const index = this.booklist.findIndex((b: Book) => b.id === id);
 
-    this.booklist[index] = {
-      ...this.booklist[index],
-      ...updates
-    };
+  async updateById(id: number, updates: Partial<Book>): Promise<Book | undefined> {
+    const fields = Object.keys(updates);
+    if (fields.length === 0) return undefined;
 
-    return this.booklist[index];
+    const setString = fields.map(f => `${f} = ?`).join(", ");
+    const values = fields.map(f => (updates as any)[f]);
+    values.push(id);
+
+    const query = `UPDATE Livro SET ${setString} WHERE id = ?`;
+    await executarComandoSQLAsync(query, values);
+
+    return this.findById(id);
   }
-
 
   deleteBookById(id: number): Book {
     const index = this.booklist.findIndex((u: Book) => u.id === id);

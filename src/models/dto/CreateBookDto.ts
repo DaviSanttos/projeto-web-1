@@ -1,10 +1,12 @@
+import { BookCategoryEnum } from "../entity/BookCategoryEntity";
+
 export class CreateBookDto {
     titulo: string;
     autor: string;
     editora: string;
     edicao: string;
     ISBN: string;
-    categoria: string;
+    categoria: BookCategoryEnum;
 
     constructor(
         titulo: string,
@@ -12,7 +14,7 @@ export class CreateBookDto {
         editora: string,
         edicao: string,
         ISBN: string,
-        categoria: string
+        categoria: BookCategoryEnum
     ) {
         this.titulo = titulo;
         this.autor = autor;

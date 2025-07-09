@@ -48,3 +48,16 @@ export function executarComandoSQL(
 	});
 }
 
+export function executarComandoSQLAsync(query: string, valores: any[]): Promise<any> {
+  return new Promise((resolve, reject) => {
+    mysqlConnection.query(query, valores, (err, resultado) => {
+      if (err) {
+        console.error('Erro ao executar a query:', err);
+        reject(err);
+      } else {
+        resolve(resultado);
+      }
+    });
+  });
+}
+

@@ -121,6 +121,15 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BookCategoryEnum": {
+				"enum": [
+					"Romance",
+					"Computação",
+					"Letras",
+					"Gestão"
+				],
+				"type": "string"
+			},
 			"CreateBookDto": {
 				"properties": {
 					"titulo": {
@@ -139,7 +148,7 @@
 						"type": "string"
 					},
 					"categoria": {
-						"type": "string"
+						"$ref": "#/components/schemas/BookCategoryEnum"
 					}
 				},
 				"required": [
@@ -152,15 +161,6 @@
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"BookCategoryEnum": {
-				"enum": [
-					"Romance",
-					"Computação",
-					"Letras",
-					"Gestão"
-				],
-				"type": "string"
 			},
 			"UpdateBookDto": {
 				"properties": {

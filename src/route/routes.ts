@@ -84,6 +84,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BookCategoryEnum": {
+        "dataType": "refEnum",
+        "enums": ["Romance","Computação","Letras","Gestão"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateBookDto": {
         "dataType": "refObject",
         "properties": {
@@ -92,14 +97,9 @@ const models: TsoaRoute.Models = {
             "editora": {"dataType":"string","required":true},
             "edicao": {"dataType":"string","required":true},
             "ISBN": {"dataType":"string","required":true},
-            "categoria": {"dataType":"string","required":true},
+            "categoria": {"ref":"BookCategoryEnum","required":true},
         },
         "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "BookCategoryEnum": {
-        "dataType": "refEnum",
-        "enums": ["Romance","Computação","Letras","Gestão"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UpdateBookDto": {

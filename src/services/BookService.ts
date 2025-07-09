@@ -8,7 +8,7 @@ import { StockService } from "./StockService";
 export class BookService {
     bookRepository = BookRepository.getInstance();
 
-    createBook(bookData: any): Book {
+    async createBook(bookData: any): Promise<Book> {
         const { titulo, autor, editora, edicao, ISBN: isbn, categoria } = bookData;
 
         const exists = this.bookRepository.existsByIsbn(isbn);
@@ -22,7 +22,7 @@ export class BookService {
         });
 
         if (book) throw new Error("Livro já cadastrado com esses dados: autor, editora e edição");
-        
+
         const categoria_id = BookCategoryService.findBookCategoryIdByname(categoria);
 
         if (!categoria_id) throw new Error("Categoria não encontrada");
@@ -40,41 +40,25 @@ export class BookService {
         return newBook;
     }
 
-    listBooks(params: any): Book[] {
-        const bookList = this.bookRepository.list();
-
-        let categoria_id: number;
-        if (params.categoria) categoria_id = BookCategoryService.findBookCategoryIdByname(params?.categoria);
-
-        return bookList.filter((book: any) => {
-            return (
-                (!params?.titulo || book.titulo.toLowerCase().includes(params.titulo.toLowerCase())) &&
-                (!params?.autor || book.autor.toLowerCase().includes(params.autor.toLowerCase())) &&
-                (!params?.editora || book.editora.toLowerCase().includes(params.editora.toLowerCase())) &&
-                (!params?.edicao || book.edicao.toLowerCase().includes(params.edicao.toLowerCase())) &&
-                (!params?.isbn || book.isbn.toLowerCase().includes(params.isbn.toLowerCase())) &&
-                (!categoria_id || book.categoria_id === categoria_id)
-            );
-        });
+    async listBooks(params: any): Promise<Book[]> {
+        const bookList = await this.bookRepository.list(params);
+        return bookList;
     }
 
-    findBookByIsbn(isbn: string): Book {
+    async findBookByIsbn(isbn: string): Promise<Book> {
         if (!isbn) throw new Error("Informacoes incompletas");
 
-        const book = this.bookRepository.getByIsbn(isbn);
+        const book = await this.bookRepository.getByIsbn(isbn);
 
         if (!book) throw new Error("Livro nao encontrado");
         return book;
     }
 
-    updateBookByIsbn(isbn: string, body: any): Book {
-        const book = this.bookRepository.getByIsbn(isbn);
+    async updateBookByIsbn(isbn: string, body: any): Promise<Book | undefined> {
+        const book = await this.bookRepository.getByIsbn(isbn);
         if (!book) throw new Error("Livro nao encontrado");
 
         const { titulo, autor, editora, edicao, categoria } = body;
-        // if (!body.titulo || !body.autor || !body.editora || !body.edicao || !body.categoria) {
-        //     throw new Error("Informacoes incompletas");
-        // }
 
         const categoria_id = BookCategoryService.findBookCategoryIdByname(categoria);
 
@@ -90,26 +74,26 @@ export class BookService {
         return newBook;
     }
 
-    deleteBookByIsbn(isbn: string): Book {
-        const book = this.bookRepository.getByIsbn(isbn);
-        if (!book) throw new Error("Livro nao encontrado");
+    // deleteBookByIsbn(isbn: string): Book {
+    //     const book = this.bookRepository.getByIsbn(isbn);
+    //     if (!book) throw new Error("Livro nao encontrado");
 
-        const stockService = new StockService();
+    //     const stockService = new StockService();
 
-        const copies = stockService.findCopiesByBookId(book.id);
+    //     const copies = stockService.findCopiesByBookId(book.id);
 
-        const loanService = new LoanService();
+    //     const loanService = new LoanService();
 
-        const loans = loanService.findLoansByCopyIds(copies.map(copy => copy.id));
+    //     const loans = loanService.findLoansByCopyIds(copies.map(copy => copy.id));
 
-        if (loans.length > 0) {
-            throw new Error("Livro não pode ser deletado, pois existem exemplares emprestados");
-        }
+    //     if (loans.length > 0) {
+    //         throw new Error("Livro não pode ser deletado, pois existem exemplares emprestados");
+    //     }
 
-        const deletedBook = this.bookRepository.deleteBookById(book.id);
+    //     const deletedBook = this.bookRepository.deleteBookById(book.id);
 
-        return deletedBook;
-    }
+    //     return deletedBook;
+    // }
 
     getRelacionCourseToBookCategory(couserId: number, bookId: number): boolean {
         const book = this.bookRepository.findById(bookId);

@@ -24,7 +24,7 @@ export class CatalogController extends Controller {
     @Res() badRequest: TsoaResponse<400, BasicResponseDto>
   ): Promise<void> {
     try {
-      const list = this.userCategoryService.list();
+      const list = await this.userCategoryService.list();
       return success(200, new BasicResponseDto("Lista de categorias de usuários!", list));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -37,7 +37,7 @@ export class CatalogController extends Controller {
     @Res() badRequest: TsoaResponse<400, BasicResponseDto>
   ): Promise<void> {
     try {
-      const list = this.bookCategoryService.list();
+      const list = await this.bookCategoryService.list();
       return success(200, new BasicResponseDto("Lista de categorias de livros!", list));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));
@@ -50,7 +50,7 @@ export class CatalogController extends Controller {
     @Res() badRequest: TsoaResponse<400, BasicResponseDto>
   ): Promise<void> {
     try {
-      const list = this.courseService.list();
+      const list = await this.courseService.list();
       return success(200, new BasicResponseDto("Cursos encontrados!", list));
     } catch (error: any) {
       return badRequest(400, new BasicResponseDto(error.message, error));

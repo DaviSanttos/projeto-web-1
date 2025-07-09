@@ -23,7 +23,7 @@ export class BookService {
 
         if (book) throw new Error("Livro já cadastrado com esses dados: autor, editora e edição");
 
-        const categoria_id = BookCategoryService.findBookCategoryIdByname(categoria);
+        const categoria_id = await BookCategoryService.findBookCategoryIdByname(categoria);
 
         if (!categoria_id) throw new Error("Categoria não encontrada");
 
@@ -60,7 +60,7 @@ export class BookService {
 
         const { titulo, autor, editora, edicao, categoria } = body;
 
-        const categoria_id = BookCategoryService.findBookCategoryIdByname(categoria);
+        const categoria_id = await BookCategoryService.findBookCategoryIdByname(categoria);
 
         const bookUpdate: Partial<Book> = {
             titulo,

@@ -4,18 +4,18 @@ import { CourseRepository } from "../repositories/CourseRepository";
 class CourseService {
     courseRepository = CourseRepository.getInstance();
 
-    findCourseIdByname(name: string): number {
+    async findCourseIdByname(name: string): Promise<number> {
 
         if (!name) throw new Error("sem nome de curso");
 
-        const course = this.courseRepository.getIdByName(name);
+        const course = await this.courseRepository.getIdByName(name);
 
         if (!course) throw new Error("Curso nao encontrado");
         return course;
     }
 
-    list(): Course[] {
-        return this.courseRepository.list();
+    async list(): Promise<Course[]> {
+        return await this.courseRepository.list();
     }
 
     relacionCourseToBookCategory(couserId: number, bookCategoryId: number): boolean {

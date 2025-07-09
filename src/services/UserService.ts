@@ -1,5 +1,4 @@
-import { Loan } from "../models/entity/LoanEntity";
-import { User, userActiveValues } from "../models/entity/UserEntity";
+import { User } from "../models/entity/UserEntity";
 import { UserRepository } from "../repositories/UserRepository";
 import { validateCPF } from "../validators/validateCpf";
 import CourseService from "./CourseService";
@@ -27,8 +26,8 @@ export class UserService {
         const exists = await this.userRepository.existsByCpf(cpf);
         if (exists) throw new Error("Usuário já cadastrado com esse CPF");
 
-        const curso_id = this.courseService.findCourseIdByname(curso);
-        const categoria_id = this.userCategoryService.findUserCategoryIdByname(categoria);
+        const curso_id = await this.courseService.findCourseIdByname(curso);
+        const categoria_id = await this.userCategoryService.findUserCategoryIdByname(categoria);
 
         const newUser = new User(
             nome,
@@ -46,8 +45,8 @@ export class UserService {
         let curso_id: number;
         let categoria_id: number;
 
-        if (params.curso) curso_id = this.courseService.findCourseIdByname(params?.curso);
-        if (params.categoria) categoria_id = this.userCategoryService.findUserCategoryIdByname(params?.categoria);
+        if (params.curso) curso_id = await this.courseService.findCourseIdByname(params?.curso);
+        if (params.categoria) categoria_id = await this.userCategoryService.findUserCategoryIdByname(params?.categoria);
 
         return userList.filter((user: any) => {
             return (

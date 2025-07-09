@@ -1,4 +1,4 @@
-import { executarComandoSQL } from "../database/mysql";
+import { executarComandoSQL, executarComandoSQLAsync } from "../database/mysql";
 import { BookCategory } from "../models/entity/BookCategoryEntity";
 
 export class BookCategoryRepository {
@@ -21,12 +21,21 @@ export class BookCategoryRepository {
     return this.instance;
   }
 
-  list() {
-    return this.bookCategoryList;
+  async list(): Promise<BookCategory[]> {
+    const query = `SELECT * FROM CategoriaLivro`;
+    const result = await executarComandoSQLAsync(query, []);
+    return result as BookCategory[];
   }
 
-  getIdByName(name: string): number | undefined {
-    return this.bookCategoryList.find(category => category.nome === name)?.id;
+  async getIdByName(name: string): Promise<number | undefined> {
+    const query = `SELECT id FROM CategoriaLivro WHERE nome = ?`;
+    const result = await executarComandoSQLAsync(query, [name]);
+
+    if (Array.isArray(result) && result.length > 0) {
+      return result[0].id;
+    }
+
+    return undefined;
   }
 
   imprimeResult(err: any, result: any) {

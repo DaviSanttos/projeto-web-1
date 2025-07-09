@@ -1,4 +1,4 @@
-import { executarComandoSQL } from "../database/mysql";
+import { executarComandoSQL, executarComandoSQLAsync } from "../database/mysql";
 import { Course } from "../models/entity/CourseEntity";
 
 export class CourseRepository {
@@ -20,13 +20,23 @@ export class CourseRepository {
     return this.instance;
   }
 
-  list() {
-    return this.course;
+  async list(): Promise<Course[]> {
+    const query = `SELECT * FROM Curso`;
+    const result = await executarComandoSQLAsync(query, []);
+    return result as Course[];
   }
 
-  getIdByName(name: string): number | undefined {
-    return this.course.find(course => course.nome === name)?.id;
+  async getIdByName(name: string): Promise<number | undefined> {
+    const query = `SELECT id FROM Curso WHERE nome = ?`;
+    const result = await executarComandoSQLAsync(query, [name]);
+
+    if (Array.isArray(result) && result.length > 0) {
+      return result[0].id;
+    }
+
+    return undefined;
   }
+
 
   imprimeResult(err: any, result: any) {
     if (err) {

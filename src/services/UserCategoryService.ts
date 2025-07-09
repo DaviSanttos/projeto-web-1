@@ -4,18 +4,18 @@ import { UserCategoryRepository } from "../repositories/UserCategoryRepository";
 class UserCategoryService {
     userCategoryRepository = UserCategoryRepository.getInstance();
 
-    findUserCategoryIdByname(name: string): number {
+    async findUserCategoryIdByname(name: string): Promise<number> {
 
         if (!name) throw new Error("Sem nome de categoria de usuário");
 
-        const userCategory = this.userCategoryRepository.getIdByName(name);
+        const userCategory = await this.userCategoryRepository.getIdByName(name);
 
         if (!userCategory) throw new Error("Categoria de usuário nao encontrada");
         return userCategory;
     }
 
-    list(): UserCategory[] {
-        return this.userCategoryRepository.list();
+    async list(): Promise<UserCategory[]> {
+        return await this.userCategoryRepository.list();
     }
 }
 

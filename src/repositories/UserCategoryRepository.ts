@@ -1,4 +1,4 @@
-import { executarComandoSQL } from "../database/mysql";
+import { executarComandoSQL, executarComandoSQLAsync } from "../database/mysql";
 import { UserCategory } from "../models/entity/UserCategoryEntity";
 import { User } from "../models/entity/UserEntity";
 
@@ -21,16 +21,22 @@ export class UserCategoryRepository {
     return this.instance;
   }
 
-  list() {
-    return this.userCategory;
+  async list(): Promise<UserCategory[]> {
+    const query = `SELECT * FROM CategoriaUsuario`;
+    const result = await executarComandoSQLAsync(query, []);
+    return result as UserCategory[];
   }
 
-  getIdByName(name: string): number | undefined {
-    const user = this.userCategory.find(userCategory => userCategory.nome === name);
-    if (!user) return undefined;
-    return user.id;
-  }
+  async getIdByName(name: string): Promise<number | undefined> {
+    const query = `SELECT id FROM CategoriaUsuario WHERE nome = ?`;
+    const result = await executarComandoSQLAsync(query, [name]);
 
+    if (Array.isArray(result) && result.length > 0) {
+      return result[0].id;
+    }
+
+    return undefined;
+  }
 
   imprimeResult(err: any, result: any) {
     if (err) {

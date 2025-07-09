@@ -115,7 +115,9 @@ export class UserRepository {
         cpf VARCHAR(14) NOT NULL UNIQUE,
         ativo ENUM('ativo', 'inativo', 'suspenso') DEFAULT 'ativo',
         categoria_id INT NOT NULL,
-        curso_id INT NOT NULL
+        curso_id INT NOT NULL,
+        CONSTRAINT fk_categoria_usuario FOREIGN KEY (categoria_id) REFERENCES CategoriaUsuario(id),
+        CONSTRAINT fk_curso_usuario FOREIGN KEY (curso_id) REFERENCES Curso(id)
       )
     `;
 

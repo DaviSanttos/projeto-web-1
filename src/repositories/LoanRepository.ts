@@ -64,7 +64,9 @@ export class LoanRepository {
         data_devolucao DATETIME,
         data_entrega DATETIME,
         dias_atraso INT NOT NULL,
-        suspensao_ate DATETIME
+        suspensao_ate DATETIME,
+        CONSTRAINT fk_usuario_emprestimo FOREIGN KEY (usuario_id) REFERENCES Usuario(id),
+        CONSTRAINT fk_estoque_emprestimo FOREIGN KEY (estoque_id) REFERENCES Estoque(id)
       )
     `;
 

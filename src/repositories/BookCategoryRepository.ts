@@ -64,7 +64,7 @@ export class BookCategoryRepository {
 
       for (const categoria of categorias) {
         const query = `
-        INSERT INTO BookCategory (id, nome)
+        INSERT INTO CategoriaLivro (id, nome)
         VALUES (?, ?)
         ON DUPLICATE KEY UPDATE nome = VALUES(nome)
       `;

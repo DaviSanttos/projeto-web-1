@@ -66,7 +66,7 @@ export class UserCategoryRepository {
 
       for (const categoria of categorias) {
         const query = `
-        INSERT INTO UserCategory (id, nome)
+        INSERT INTO CategoriaUsuario (id, nome)
         VALUES (?, ?)
         ON DUPLICATE KEY UPDATE nome = VALUES(nome)
       `;

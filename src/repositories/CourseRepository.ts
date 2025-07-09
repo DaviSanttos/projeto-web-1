@@ -62,7 +62,7 @@ export class CourseRepository {
 
       for (const curso of cursos) {
         const query = `
-        INSERT INTO Course (id, nome)
+        INSERT INTO Curso (id, nome)
         VALUES (?, ?)
         ON DUPLICATE KEY UPDATE nome = VALUES(nome)
       `;

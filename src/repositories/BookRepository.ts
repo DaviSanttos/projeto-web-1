@@ -80,7 +80,8 @@ export class BookRepository {
         editora VARCHAR(255) NOT NULL,
         edicao VARCHAR(100) NOT NULL,
         isbn VARCHAR(50) NOT NULL,
-        categoria_id INT NOT NULL
+        categoria_id INT NOT NULL,
+        CONSTRAINT fk_categoria_livro FOREIGN KEY (categoria_id) REFERENCES CategoriaLivro(id)
       )
     `;
 

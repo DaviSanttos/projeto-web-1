@@ -57,15 +57,22 @@ export class LoanService {
         return updatedLoan;
     }
 
-    async findLoansByUserId(userId: number): Promise<Loan[]> {
+    async findLoansWithoutRefund(userId: number): Promise<Loan[]> {
         const loans = await this.loanRepository.list();
         const userLoans = loans.filter(loan => loan.usuario_id === userId && !loan.data_devolucao);
 
         return userLoans;
     }
 
+    async findLoansByUserId(userId: number): Promise<Loan[]> {
+        const loans = await this.loanRepository.list();
+        const userLoans = loans.filter(loan => loan.usuario_id === userId && !loan.reativado_em);
+
+        return userLoans;
+    }
+
     private async checkLimitByCategory(user: User): Promise<void> {
-        const loans = await this.findLoansByUserId(user.id);
+        const loans = await this.findLoansWithoutRefund(user.id);
 
         if (user.categoria_id === 1 && loans.length >= 3) {
             throw new Error("Usuários da categoria Aluno podem ter no máximo 3 empréstimos ativos");
@@ -100,6 +107,10 @@ export class LoanService {
         const existingLoan = await this.loanRepository.findById(loan.id);
         if (!existingLoan) throw new Error("Empréstimo não encontrado");
         
-        await this.loanRepository.updateOne(existingLoan);
+        await this.loanRepository.updateOne(loan);
+    }
+
+    async getUsersWithPendingLoans(): Promise<number[]> {
+        return await this.loanRepository.getUsersWithPendingLoans();
     }
 }

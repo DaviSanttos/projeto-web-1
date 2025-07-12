@@ -103,8 +103,7 @@ export class StockRepository {
         livro_id INT NOT NULL,
         quantidade INT NOT NULL,
         quantidade_emprestada INT NOT NULL,
-        disponivel BOOLEAN NOT NULL,
-        CONSTRAINT fk_livro_estoque FOREIGN KEY (livro_id) REFERENCES Livro(id)
+        disponivel BOOLEAN NOT NULL
       )
     `;
 

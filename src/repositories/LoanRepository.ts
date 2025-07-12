@@ -64,7 +64,7 @@ export class LoanRepository {
       UPDATE Emprestimo SET 
         usuario_id = ?, estoque_id = ?, data_emprestimo = ?, 
         data_devolucao = ?, data_entrega = ?, dias_atraso = ?, 
-        suspensao_ate = ?
+        suspensao_ate = ?, reativado_em = ?
       WHERE id = ?
     `;
 
@@ -76,6 +76,7 @@ export class LoanRepository {
       loan.data_entrega ?? null,
       loan.dias_atraso,
       loan.suspensao_ate ?? null,
+      loan.reativado_em ?? null,
       loan.id
     ];
 
@@ -104,8 +105,7 @@ export class LoanRepository {
         data_entrega DATETIME,
         dias_atraso INT NOT NULL,
         suspensao_ate DATETIME,
-        CONSTRAINT fk_usuario_emprestimo FOREIGN KEY (usuario_id) REFERENCES Usuario(id),
-        CONSTRAINT fk_estoque_emprestimo FOREIGN KEY (estoque_id) REFERENCES Estoque(id)
+        reativado_em DATETIME NULL
       )
     `;
 
@@ -114,5 +114,19 @@ export class LoanRepository {
     } catch (err) {
       console.error('Erro ao criar a tabela "Loan":', err);
     }
+  }
+
+  async getUsersWithPendingLoans(): Promise<number[]> {
+    const query = `
+    SELECT DISTINCT usuario_id
+    FROM Emprestimo
+    WHERE 
+      data_entrega < NOW()
+      AND data_devolucao IS NULL
+      AND (suspensao_ate IS NULL OR suspensao_ate < NOW())
+  `;
+
+    const rows = await executarComandoSQLAsync(query, []);
+    return rows?.map((row: any) => row.usuario_id);
   }
 }

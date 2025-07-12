@@ -51,7 +51,7 @@ export class UserRepository {
     return user!;
   }
 
- async deleteUserById(id: number): Promise<User> {
+  async deleteUserById(id: number): Promise<User> {
     const user = await this.findById(id);
     if (!user) throw new Error("Usuário não encontrado");
 
@@ -80,6 +80,10 @@ export class UserRepository {
     }
   }
 
+  async findSuspendedOrInactiveUsers(): Promise<User[]> {
+    const query = `SELECT * FROM Usuario WHERE ativo IN ('inativo', 'suspenso')`;
+    return await executarComandoSQLAsync(query, []);
+  }
 
   async createUserTable() {
     try {
@@ -90,9 +94,7 @@ export class UserRepository {
         cpf VARCHAR(14) NOT NULL UNIQUE,
         ativo ENUM('ativo', 'inativo', 'suspenso') DEFAULT 'ativo',
         categoria_id INT NOT NULL,
-        curso_id INT NOT NULL,
-        CONSTRAINT fk_categoria_usuario FOREIGN KEY (categoria_id) REFERENCES CategoriaUsuario(id),
-        CONSTRAINT fk_curso_usuario FOREIGN KEY (curso_id) REFERENCES Curso(id)
+        curso_id INT NOT NULL
       )
     `;
 

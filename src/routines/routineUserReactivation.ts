@@ -7,7 +7,6 @@ import { Time } from "../utils/Time";
 
 export class routineUserReactivationRoutine {
     private loanService = new LoanService();
-    private userService = new UserService();
     private userRepository = UserRepository.getInstance();
 
     start() {
@@ -16,11 +15,7 @@ export class routineUserReactivationRoutine {
         setInterval(async () => {
             try {
                 const today = Time.nowInBrazil();
-
-                const allUsers = await this.userRepository.list();
-                const usersToCheck = allUsers.filter(user =>
-                    user.ativo === userActive.SUSPENSO || user.ativo === userActive.INATIVO
-                );
+                const usersToCheck = await this.userRepository.findSuspendedOrInactiveUsers();
 
                 if (usersToCheck.length === 0) {
                     console.log(chalk.yellow("Nenhum usuário suspenso ou inativo encontrado."));
@@ -33,17 +28,25 @@ export class routineUserReactivationRoutine {
                     if (userLoans.length === 0) continue;
 
                     const allReturned = userLoans.every(loan => !!loan.data_devolucao);
-                    if (!allReturned) continue;
-
                     const allSuspensionsExpired = userLoans.every(loan => {
                         if (!loan.suspensao_ate) return true;
                         const suspensaoAte = Time.toBrazilTime(loan.suspensao_ate);
                         return suspensaoAte <= today;
                     });
 
-                    if (allSuspensionsExpired) {
+                    console.log(chalk.blue(`Usuário ${user.id} - devolveu todos: ${allReturned}, Suspensões expiradas: ${allSuspensionsExpired}`));
+
+                    if (allReturned && allSuspensionsExpired) {
                         await this.userRepository.updateById(user.id, { ativo: userActive.ATIVO });
                         console.log(chalk.green(`Usuário ${user.id} reativado.`));
+
+                        for (const loan of userLoans) {
+                            if (!loan.reativado_em) {
+                                loan.reativado_em = today;
+                                await this.loanService.updateLoan(loan);
+                                console.log(chalk.yellow(`Empréstimo ${loan.id} marcado como usado para reativação.`));
+                            }
+                        }
                     }
                 }
             } catch (err) {

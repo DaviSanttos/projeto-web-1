@@ -9,6 +9,7 @@ export class Loan {
     data_entrega?: Date;
     dias_atraso: number;
     suspensao_ate?: Date
+    reativado_em?: Date;
 
     constructor(
         usuario_id: number, 

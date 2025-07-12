@@ -104,7 +104,7 @@ export class UserService {
             throw new Error("Usuário não encontrado");
         }
 
-        const loans = await loanService.findLoansByUserId(user.id);
+        const loans = await loanService.findLoansWithoutRefund(user.id);
 
         if (loans.length > 0) {
             throw new Error("Usuário não pode ser excluído, pois possui empréstimos pendentes.");

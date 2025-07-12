@@ -20,7 +20,7 @@ const userCategoryRepository = UserCategoryRepository.getInstance();
 const bookCategoryRepository = BookCategoryRepository.getInstance();
 const courseRepository = CourseRepository.getInstance();
 
-new routineLoanSuspension().start();
+// new routineLoanSuspension().start();
 new routineUserReactivationRoutine().start();
 
 const app = express();

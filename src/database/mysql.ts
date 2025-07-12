@@ -4,35 +4,42 @@ const dbConfig = {
 	host: 'localhost',
 	port: 3306,
 	user: 'root',
-	password: 'mysql',
-	database: 'biblioteca'
+	password: 'mysql'
 };
 
-const mysqlConnection: Connection = mysql.createConnection(dbConfig);
+let mysqlConnection: Connection = mysql.createConnection(dbConfig);
 
-mysqlConnection.connect(async (err: QueryError | null) => {
-	if (err) {
-		console.error('Erro ao conectar ao banco de dados:', err);
-		throw err;
-	}
-	console.log('Conexão bem-sucedida com o banco de dados MySQL');
+export async function initDatabase(): Promise<Connection> {
+	return new Promise((resolve, reject) => {
+		mysqlConnection = mysql.createConnection(dbConfig);
 
-	mysqlConnection.query('CREATE DATABASE IF NOT EXISTS biblioteca', (err) => {
-		if (err) {
-			console.error('Erro ao criar o banco de dados "biblioteca":', err);
-			throw err;
-		}
-		console.log('Banco de dados "biblioteca" criado ou já existente.');
-
-		mysqlConnection.changeUser({ database: 'biblioteca' }, (err) => {
+		mysqlConnection.connect((err: QueryError | null) => {
 			if (err) {
-				console.error('Erro ao mudar para o banco "biblioteca":', err);
-				throw err;
+				console.error('Erro ao conectar ao banco de dados:', err);
+				return reject(err);
 			}
-			console.log('Agora usando o banco de dados "biblioteca"');
+			console.log('Conectado ao MySQL com sucesso.');
+
+			mysqlConnection.query('CREATE DATABASE IF NOT EXISTS livraria', (err) => {
+				if (err) {
+					console.error('Erro ao criar o banco de dados:', err);
+					return reject(err);
+				}
+				console.log('Banco de dados "livraria" criado ou já existente.');
+
+				mysqlConnection.changeUser({ database: 'livraria' }, (err) => {
+					if (err) {
+						console.error('Erro ao mudar de banco:', err);
+						return reject(err);
+					}
+					console.log('Usando banco de dados "livraria"');
+					resolve(mysqlConnection);
+				});
+			});
 		});
 	});
-});
+}
+
 
 export function executarComandoSQL(
 	query: string,
@@ -49,15 +56,15 @@ export function executarComandoSQL(
 }
 
 export function executarComandoSQLAsync(query: string, valores: any[]): Promise<any> {
-  return new Promise((resolve, reject) => {
-    mysqlConnection.query(query, valores, (err, resultado) => {
-      if (err) {
-        console.error('Erro ao executar a query:', err);
-        reject(err);
-      } else {
-        resolve(resultado);
-      }
-    });
-  });
+	return new Promise((resolve, reject) => {
+		mysqlConnection.query(query, valores, (err, resultado) => {
+			if (err) {
+				console.error('Erro ao executar a query:', err);
+				reject(err);
+			} else {
+				resolve(resultado);
+			}
+		});
+	});
 }
 
